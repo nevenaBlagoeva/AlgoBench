@@ -1643,14 +1643,10 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jLabel64" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                                      <Group type="102" attributes="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jLabel66" alignment="0" min="-2" max="-2" attributes="0"/>
                                               <Component id="jLabel68" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -1663,17 +1659,15 @@
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Component id="jLabel67" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="jComboBoxRangeTo" pref="116" max="32767" attributes="0"/>
+                                          <Component id="jComboBoxRangeTo" pref="104" max="32767" attributes="0"/>
+                                          <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                                       </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                                          <Component id="jLabel65" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="jComboBoxQueueSize" max="32767" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jLabelError1" max="32767" attributes="0"/>
-                                      </Group>
+                                      <Component id="jLabelErrorRange" max="32767" attributes="0"/>
                                   </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jLabel64" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -1697,59 +1691,20 @@
                                           <Component id="jComboBoxRangeTo" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabelError1" pref="39" max="32767" attributes="0"/>
-                                      <Group type="102" attributes="0">
-                                          <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="jComboBoxQueueSize" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jLabel65" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
+                                  <EmptySpace type="unrelated" max="32767" attributes="0"/>
+                                  <Component id="jLabelErrorRange" min="-2" pref="53" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JComboBox" name="jComboBoxQueueSize">
-                          <Properties>
-                            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                              <Font name="Lucida Grande" size="14" style="0"/>
-                            </Property>
-                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="4">
-                                <StringItem index="0" value="100000"/>
-                                <StringItem index="1" value="250000"/>
-                                <StringItem index="2" value="500000"/>
-                                <StringItem index="3" value="1000000"/>
-                              </StringArray>
-                            </Property>
-                            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                              <Dimension value="[120, 25]"/>
-                            </Property>
-                          </Properties>
-                          <Events>
-                            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jComboBoxQueueSizeItemStateChanged"/>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jComboBoxQueueSizeActionPerformed"/>
-                          </Events>
-                        </Component>
                         <Component class="javax.swing.JLabel" name="jLabel64">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Lucida Grande" size="14" style="0"/>
                             </Property>
                             <Property name="text" type="java.lang.String" value="Input Settings:"/>
-                          </Properties>
-                        </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel65">
-                          <Properties>
-                            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                              <Font name="Lucida Grande" size="14" style="0"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Queue Size (N):"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel66">
@@ -1768,10 +1723,10 @@
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                               <StringArray count="5">
                                 <StringItem index="0" value="1000000"/>
-                                <StringItem index="1" value="10000000"/>
-                                <StringItem index="2" value="25000000"/>
-                                <StringItem index="3" value="50000000"/>
-                                <StringItem index="4" value="75000000"/>
+                                <StringItem index="1" value="2500000"/>
+                                <StringItem index="2" value="5000000"/>
+                                <StringItem index="3" value="7500000"/>
+                                <StringItem index="4" value="10000000"/>
                               </StringArray>
                             </Property>
                             <Property name="name" type="java.lang.String" value="STARTSIZE" noResource="true"/>
@@ -1803,7 +1758,7 @@
                                 <StringItem index="1" value="25000000"/>
                                 <StringItem index="2" value="50000000"/>
                                 <StringItem index="3" value="75000000"/>
-                                <StringItem index="4" value="100000000"/>
+                                <StringItem index="4" value=" "/>
                               </StringArray>
                             </Property>
                             <Property name="name" type="java.lang.String" value="NUMSTEPS" noResource="true"/>
@@ -1835,7 +1790,7 @@
                                 <StringItem index="1" value="1000000"/>
                                 <StringItem index="2" value="2500000"/>
                                 <StringItem index="3" value="5000000"/>
-                                <StringItem index="4" value="10000000"/>
+                                <StringItem index="4" value=" "/>
                               </StringArray>
                             </Property>
                             <Property name="name" type="java.lang.String" value="STEPSIZE" noResource="true"/>
@@ -1847,7 +1802,7 @@
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jComboBoxStepActionPerformed"/>
                           </Events>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabelError1">
+                        <Component class="javax.swing.JLabel" name="jLabelErrorRange">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Lucida Grande" size="14" style="0"/>

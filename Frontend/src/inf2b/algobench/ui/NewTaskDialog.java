@@ -89,8 +89,6 @@ public class NewTaskDialog extends JDialog {
     public NewTaskDialog(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        jComboBoxQueueSize.setVisible(false);
-        jLabel65.setVisible(false);
 
         this.userCancelled = true;
         this.task = new Task();
@@ -522,16 +520,14 @@ public class NewTaskDialog extends JDialog {
         jComboBoxHashInputSize = new javax.swing.JComboBox();
         jLabel19 = new javax.swing.JLabel();
         jPanelQueueInput = new javax.swing.JPanel();
-        jComboBoxQueueSize = new javax.swing.JComboBox();
         jLabel64 = new javax.swing.JLabel();
-        jLabel65 = new javax.swing.JLabel();
         jLabel66 = new javax.swing.JLabel();
         jComboBoxRangeFrom = new javax.swing.JComboBox();
         jLabel67 = new javax.swing.JLabel();
         jComboBoxRangeTo = new javax.swing.JComboBox();
         jLabel68 = new javax.swing.JLabel();
         jComboBoxStep = new javax.swing.JComboBox();
-        jLabelError1 = new javax.swing.JLabel();
+        jLabelErrorRange = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jPanelStep3 = new javax.swing.JPanel();
         jPanelOptions3 = new javax.swing.JPanel();
@@ -1494,31 +1490,14 @@ public class NewTaskDialog extends JDialog {
 
         jPanelQueueInput.setFont(new java.awt.Font("Yu Gothic UI", 0, 12)); // NOI18N
 
-        jComboBoxQueueSize.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        jComboBoxQueueSize.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "100000", "250000", "500000", "1000000" }));
-        jComboBoxQueueSize.setPreferredSize(new java.awt.Dimension(120, 25));
-        jComboBoxQueueSize.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBoxQueueSizeItemStateChanged(evt);
-            }
-        });
-        jComboBoxQueueSize.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxQueueSizeActionPerformed(evt);
-            }
-        });
-
         jLabel64.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         jLabel64.setText("Input Settings:");
-
-        jLabel65.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        jLabel65.setText("Queue Size (N):");
 
         jLabel66.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         jLabel66.setText("Range From:");
 
         jComboBoxRangeFrom.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        jComboBoxRangeFrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1000000", "10000000", "25000000", "50000000", "75000000" }));
+        jComboBoxRangeFrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1000000", "2500000", "5000000", "7500000", "10000000" }));
         jComboBoxRangeFrom.setName("STARTSIZE"); // NOI18N
         jComboBoxRangeFrom.setPreferredSize(new java.awt.Dimension(120, 25));
         jComboBoxRangeFrom.addItemListener(new java.awt.event.ItemListener() {
@@ -1536,7 +1515,7 @@ public class NewTaskDialog extends JDialog {
         jLabel67.setText("Range To:");
 
         jComboBoxRangeTo.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        jComboBoxRangeTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10000000", "25000000", "50000000", "75000000", "100000000" }));
+        jComboBoxRangeTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10000000", "25000000", "50000000", "75000000", " " }));
         jComboBoxRangeTo.setName("NUMSTEPS"); // NOI18N
         jComboBoxRangeTo.setPreferredSize(new java.awt.Dimension(120, 25));
         jComboBoxRangeTo.addItemListener(new java.awt.event.ItemListener() {
@@ -1554,7 +1533,7 @@ public class NewTaskDialog extends JDialog {
         jLabel68.setText("Step Size:");
 
         jComboBoxStep.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        jComboBoxStep.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "100000", "1000000", "2500000", "5000000", "10000000" }));
+        jComboBoxStep.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "100000", "1000000", "2500000", "5000000", " " }));
         jComboBoxStep.setName("STEPSIZE"); // NOI18N
         jComboBoxStep.setPreferredSize(new java.awt.Dimension(120, 25));
         jComboBoxStep.addActionListener(new java.awt.event.ActionListener() {
@@ -1563,19 +1542,16 @@ public class NewTaskDialog extends JDialog {
             }
         });
 
-        jLabelError1.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        jLabelErrorRange.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanelQueueInputLayout = new javax.swing.GroupLayout(jPanelQueueInput);
         jPanelQueueInput.setLayout(jPanelQueueInputLayout);
         jPanelQueueInputLayout.setHorizontalGroup(
             jPanelQueueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelQueueInputLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelQueueInputLayout.createSequentialGroup()
+                .addGap(39, 39, 39)
                 .addGroup(jPanelQueueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelQueueInputLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel64))
-                    .addGroup(jPanelQueueInputLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
                         .addGroup(jPanelQueueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel66)
                             .addComponent(jLabel68))
@@ -1586,14 +1562,12 @@ public class NewTaskDialog extends JDialog {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel67)
                         .addGap(18, 18, 18)
-                        .addComponent(jComboBoxRangeTo, 0, 116, Short.MAX_VALUE))
-                    .addGroup(jPanelQueueInputLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel65)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBoxQueueSize, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelError1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jComboBoxRangeTo, 0, 104, Short.MAX_VALUE)
+                        .addGap(24, 24, 24))
+                    .addComponent(jLabelErrorRange, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(jPanelQueueInputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel64)
                 .addContainerGap())
         );
         jPanelQueueInputLayout.setVerticalGroup(
@@ -1612,14 +1586,8 @@ public class NewTaskDialog extends JDialog {
                         .addComponent(jLabel66, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel67, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jComboBoxRangeTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(jPanelQueueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelError1, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
-                    .addGroup(jPanelQueueInputLayout.createSequentialGroup()
-                        .addGroup(jPanelQueueInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBoxQueueSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel65, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelErrorRange, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -3392,24 +3360,22 @@ public class NewTaskDialog extends JDialog {
         validateTreeParams();
     }//GEN-LAST:event_jComboBoxTreeSizeItemStateChanged
 
-    private void jComboBoxQueueSizeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxQueueSizeItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxQueueSizeItemStateChanged
-
-    private void jComboBoxQueueSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxQueueSizeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxQueueSizeActionPerformed
-
     private void jComboBoxRangeFromItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxRangeFromItemStateChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxRangeFromItemStateChanged
 
     private void jComboBoxRangeFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxRangeFromActionPerformed
         // TODO add your handling code here:
+        int rangeFrom = Integer.parseInt(jComboBoxRangeFrom.getSelectedItem().toString());
+        int rangeTo = Integer.parseInt(jComboBoxRangeTo.getSelectedItem().toString());
+        rangeCheck(rangeFrom, rangeTo, jLabelErrorRange);
     }//GEN-LAST:event_jComboBoxRangeFromActionPerformed
 
     private void jComboBoxRangeToItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxRangeToItemStateChanged
         // TODO add your handling code here:
+        int rangeFrom = Integer.parseInt(jComboBoxRangeFrom.getSelectedItem().toString());
+        int rangeTo = Integer.parseInt(jComboBoxRangeTo.getSelectedItem().toString());
+        rangeCheck(rangeFrom, rangeTo, jLabelErrorRange);
     }//GEN-LAST:event_jComboBoxRangeToItemStateChanged
 
     private void jComboBoxRangeToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxRangeToActionPerformed
@@ -3504,7 +3470,7 @@ public class NewTaskDialog extends JDialog {
         int upperLimit = Integer.parseInt(jComboBoxUpperLimit.getSelectedItem().toString());
 
         /* validate range */
-        rangeCheck(lowerLimit, upperLimit);
+        rangeCheck(lowerLimit, upperLimit, jLabelError);
         /* number of unique elements generated by given range should be greater than treeSize (N) */
         rangeElementsCheck(lowerLimit, upperLimit);
     }
@@ -3574,15 +3540,15 @@ public class NewTaskDialog extends JDialog {
      * @param lowerLimit lower limit of given range
      * @param upperLimit upper limit of given range
      */
-    private void rangeCheck(int lowerLimit, int upperLimit)
+    private void rangeCheck(int lowerLimit, int upperLimit, JLabel errorLabel)
     {
         if (lowerLimit > upperLimit) {
             error = "<html>Error: Upper Limit should be greater than Lower Limit. </html>";
-            jLabelError.setText(error);
+            errorLabel.setText(error);
             jButtonNext.setEnabled(false);
         }
         else {
-            jLabelError.setText("");
+            errorLabel.setText("");
             error = "";
             jButtonNext.setEnabled(true);
             String range = "[" + lowerLimit + ", " + upperLimit + "]";
@@ -4180,7 +4146,7 @@ public class NewTaskDialog extends JDialog {
                     this.task.setDeleteOp(jCheckBoxDeleteOp.isSelected());
                     break;
                 case "QUEUE":
-                    this.task.setQueueSize(this.jComboBoxQueueSize.getSelectedItem().toString());
+                    this.task.setQueueSize(this.jComboBoxRangeFrom.getSelectedItem().toString());
                     this.task.setRangeFrom(Long.parseLong(this.jComboBoxRangeFrom.getSelectedItem().toString()));
                     this.task.setRangeTo(Long.parseLong(this.jComboBoxRangeTo.getSelectedItem().toString()));
                     this.task.setStep(Long.parseLong(this.jComboBoxStep.getSelectedItem().toString()));
@@ -4321,7 +4287,6 @@ public class NewTaskDialog extends JDialog {
     private javax.swing.JComboBox jComboBoxNumRepeatsSearch;
     private javax.swing.JComboBox<String> jComboBoxNumRuns;
     private javax.swing.JComboBox<String> jComboBoxPivotElement;
-    private javax.swing.JComboBox jComboBoxQueueSize;
     private javax.swing.JComboBox jComboBoxRangeFrom;
     private javax.swing.JComboBox jComboBoxRangeTo;
     private javax.swing.JComboBox jComboBoxSearchInput;
@@ -4393,7 +4358,6 @@ public class NewTaskDialog extends JDialog {
     private javax.swing.JLabel jLabel62;
     private javax.swing.JLabel jLabel63;
     private javax.swing.JLabel jLabel64;
-    private javax.swing.JLabel jLabel65;
     private javax.swing.JLabel jLabel66;
     private javax.swing.JLabel jLabel67;
     private javax.swing.JLabel jLabel68;
@@ -4407,7 +4371,7 @@ public class NewTaskDialog extends JDialog {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelError;
-    private javax.swing.JLabel jLabelError1;
+    private javax.swing.JLabel jLabelErrorRange;
     private javax.swing.JLabel jLabelFinalSizeGraph;
     private javax.swing.JLabel jLabelFixedNumber;
     private javax.swing.JLabel jLabelGraphStructure;

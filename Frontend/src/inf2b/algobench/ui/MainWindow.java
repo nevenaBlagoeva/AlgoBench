@@ -1007,7 +1007,7 @@ public class MainWindow extends JFrame implements ITaskCompleteListener {
     }//GEN-LAST:event_jListRunsValueChanged
 
     private void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
-        JOptionPane.showMessageDialog(this, "Written by Eziama Ubachukwu and Yufen Wang\n"
+        JOptionPane.showMessageDialog(this, "Written by Eziama Ubachukwu, Yufen Wang, Shalopm Rachapudi and Nevena Blagoeva\n"
                 + "University of Edinburgh\n2016", "About AlgoBench", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jMenuItemAboutActionPerformed
 

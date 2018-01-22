@@ -1362,7 +1362,7 @@ public class MainWindow extends JFrame implements ITaskCompleteListener {
             
         }catch (IOException ex) {
             
-            String message = "This feature require libreoffice.";
+            String message = "To use this feature please install libreoffice.";
             JOptionPane.showMessageDialog(this, message, "Error: Task Name", JOptionPane.ERROR_MESSAGE);
             System.out.println("Error generating pdf!");
         }  

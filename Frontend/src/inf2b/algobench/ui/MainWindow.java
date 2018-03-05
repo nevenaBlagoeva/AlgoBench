@@ -55,6 +55,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -979,6 +982,7 @@ public class MainWindow extends JFrame implements ITaskCompleteListener {
         TaskMaster tm = this.runListModel.get(this.jListRuns.getSelectedIndex());
         tm.setState(AlgoBench.TaskState.RUNNING);
         setTaskView(tm, TaskView.OVERVIEW);
+        jButtonAddNotes.setEnabled(false);
         jListRuns.repaint();
         Thread taskRunnerThread = new Thread(tm);
         taskRunnerThread.start();
@@ -1340,6 +1344,8 @@ public class MainWindow extends JFrame implements ITaskCompleteListener {
         // try executing Libreoffice to open the PDF
             String chartID = taskMaster.getTaskID() + ".pdf";
             File saveFile = new File(chartID);
+            Path path_pdf = Paths.get(AlgoBench.JarDirectory + File.separator + "saved" + File.separator + chartID);
+            Path path_odt = Paths.get(AlgoBench.JarDirectory + File.separator + "saved" + File.separator + taskMaster.getTaskID() + ".odt");
             File fileName_pdf = new File(AlgoBench.JarDirectory + File.separator + "saved" + File.separator + chartID);
             File fileName_odt = new File(AlgoBench.JarDirectory + File.separator + "saved" + File.separator + taskMaster.getTaskID() + ".odt");
         
@@ -1355,8 +1361,14 @@ public class MainWindow extends JFrame implements ITaskCompleteListener {
                 fileName_odt.deleteOnExit();
               
             } else {
-                
-                Runtime.getRuntime().exec(new String[] {"libreoffice", String.valueOf(fileName_pdf)});
+                // Delete previous version if any
+                if(fileName_odt.exists()){
+                    fileName_odt.delete();
+                }
+                // Coppy from the pdf and launch
+                Files.copy(path_pdf, path_odt);
+                Runtime.getRuntime().exec(new String[] {"libreoffice", String.valueOf(fileName_odt)});
+                fileName_odt.deleteOnExit();
             }
             
             

@@ -3394,6 +3394,7 @@ public class NewTaskDialog extends JDialog {
         jRadioButtonAlgoGenElement.setSelected(false);
         jRadioButtonCustomElement.setSelected(false);
         jRadioButtonWorstCaseElement.setSelected(false);
+        jTextFieldCustomDataElement.setEnabled(false);
                                     
         
     }//GEN-LAST:event_jCheckBoxFindMaxElemActionPerformed

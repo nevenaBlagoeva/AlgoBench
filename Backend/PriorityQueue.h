@@ -41,7 +41,7 @@ namespace inf2b{
           PriorityQueue( InputVectorType& v, bool insertOP, bool removeMaxOP, long dataElement) : m_cursor( 0 ), m_input( v ), m_insertOP( insertOP ), m_removeMaxOP ( removeMaxOP ), m_dataElement(dataElement) {}
           ~PriorityQueue() {}
 
-          std::chrono::nanoseconds operator()();
+          long operator()();
       };
   }
 

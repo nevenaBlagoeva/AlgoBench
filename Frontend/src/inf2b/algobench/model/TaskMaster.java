@@ -318,6 +318,8 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
                             break;
                         default:
                             response.append(responseLine.trim());
+                            //System.out.printf("\nThis is RESPONSELINE : %s",String.valueOf(responseLine.trim()));
+                            //System.out.printf("\nThis is RESPONSE : %s",String.valueOf(response));
                             response.append("\n");
                             ++responseLineCount;
                             break;

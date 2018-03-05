@@ -89,7 +89,7 @@ namespace inf2b
         using NanoSec = std::chrono::nanoseconds;
         MilliSec duration;
         MicroSec duration_micro;
-        NanoSec duration_nano;
+        long duration_nano;
         std::string output;
         output.reserve( 100 );
         if ( Command[ "ALGORITHM-GROUP" ] == HASH ) {
@@ -417,8 +417,8 @@ namespace inf2b
 
                 //std::cout << "[STATUS]\tExecuting algorithm" << std::endl;
                 if (Command["ALGORITHM-GROUP"] == QUEUE ) {
-                    std::cout << "[UPDATE]\tRun " << (j + 1) << " summary:  Size=" << currentInputSize << "  Time=" << (duration_nano.count()/repetition) << "nano" << std::endl << std::endl;
-                    output.append( "\t" + std::to_string( duration_nano.count()/repetition) );
+                    std::cout << "[UPDATE]\tRun " << (j + 1) << " summary:  Size=" << currentInputSize << "  Time=" << (duration_nano/repetition) << "nano" << std::endl << std::endl;
+                    output.append( "\t" + std::to_string( duration_nano/repetition) );
                 } else if( Command[ "ALGORITHM-GROUP" ] == SEARCH){
                   std::cout << "[UPDATE]\tRun " << (j + 1) << " summary:  Size=" << currentInputSize << "  Time=" << (duration_micro.count()) << "μs" << std::endl << std::endl;
                   output.append( "\t" + std::to_string( duration_micro.count()) );

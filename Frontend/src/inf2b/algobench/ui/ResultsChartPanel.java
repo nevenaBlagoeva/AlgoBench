@@ -76,7 +76,7 @@ public class ResultsChartPanel extends JPanel {
     Task task;
     ButtonGroup showbgroup;
     boolean hasAverage;
-    String checkpoints;
+    StringBuilder checkpoints;
     Vector<Integer> checkpoitsIndex;
     private DefaultListModel<JCheckBox> seriesListModel;
 
@@ -85,7 +85,7 @@ public class ResultsChartPanel extends JPanel {
      *
      * @param taskID
      */
-    public ResultsChartPanel(String taskID, Task task, String checkpoints) {
+    public ResultsChartPanel(String taskID, Task task) {
         initComponents();
         this.taskID = taskID;
         this.task = task;
@@ -219,7 +219,6 @@ public class ResultsChartPanel extends JPanel {
         this.jRadioShowall.setSelected(true);
         seriesListModel.clear();
 
-
         Vector<XYSeries> sersChp = new Vector<XYSeries>();
         Vector<String> namesChp = new Vector<String>();
 
@@ -230,7 +229,6 @@ public class ResultsChartPanel extends JPanel {
                 XYSeries ser = entry1.getValue();
                 namesChp.add(s1);
                 sersChp.add(ser);
-                System.out.printf("\nCHPCHART: %s", s1);
             }
         Vector<XYSeries> sers = new Vector<XYSeries>();
         Vector<String> names = new Vector<String>();
@@ -242,7 +240,6 @@ public class ResultsChartPanel extends JPanel {
                 XYSeries ser = entry.getValue();
                 names.add(s);
                 sers.add(ser);
-                System.out.printf("\nCHART: %s",s);
 
             }
 
@@ -257,7 +254,6 @@ public class ResultsChartPanel extends JPanel {
                               && namesChp.elementAt(j).contains(names.elementAt(i)) // checkpoint title contains the run title
                               &&  !chart.getSeriesMap().containsKey(namesChp.elementAt(j))) // the graph does not contain it
                       {
-                          System.out.print("\n Adding expression holds\n");
                           chart.addSeries(namesChp.elementAt(j), sersChp.elementAt(j));
                           seriesListModel.addElement(new JCheckBox(names.elementAt(i)));
                           seriesListModel.addElement(new JCheckBox(namesChp.elementAt(j)));
@@ -273,7 +269,6 @@ public class ResultsChartPanel extends JPanel {
         jListSeries.setCellRenderer(new CheckBoxListRenderer());
 
         for(int i=0; i<seriesListModel.size(); i++){
-            System.out.println();
             JCheckBox c = (JCheckBox)seriesListModel.getElementAt(i);
             c.setSelected(true);
         }
@@ -282,14 +277,14 @@ public class ResultsChartPanel extends JPanel {
 
         jRadioButtonCustomshows.setEnabled(true);
         jRadioButtonCustomshows.setSelected(true);
-
+        chart.showAsModel(seriesListModel);
         jPanelChartHolder.revalidate();
         jPanelChartHolder.repaint();
         jListSeries.revalidate();
         jListSeries.repaint();
         jButtonRemoveCheckpoints.setEnabled(true);
         jButtonSetCheckpoints.setEnabled(false);
-
+        
     }
 
         private void removeCheckpoints(){
@@ -304,7 +299,6 @@ public class ResultsChartPanel extends JPanel {
 
             seriesListModel.clear();
             for(int i=0; i<names.size(); i++){
-                System.out.print(names.get(i));
                 if(!names.elementAt(i).contains("Checkpoint")){   // add all checkboxes different from checkpoints
                     seriesListModel.addElement(new JCheckBox(names.elementAt(i)));
                 } else {
@@ -315,7 +309,6 @@ public class ResultsChartPanel extends JPanel {
             jListSeries.setCellRenderer(new CheckBoxListRenderer());
 
             for(int i=0; i<seriesListModel.size(); i++){
-                System.out.println();
                 JCheckBox c = (JCheckBox)seriesListModel.getElementAt(i);
                 c.setSelected(true);
             }
@@ -399,10 +392,6 @@ public class ResultsChartPanel extends JPanel {
         //add or update a Boundary series
         Vector<Double> xData = new Vector();
         for (double d:chart.getSeriesMap().get("Run 1").getXData()) xData.add(Double.valueOf(d));
-        System.out.println(chart.getSeriesMap().get("Run 1").getXData().getClass());
-        System.out.print("Iteration");
-        for (int i=0; i<xData.size(); i++) System.out.println(xData.get(i).getClass());
-        System.out.println(xData.getClass());
         Vector<Double> yData = new Vector<>();
         double tmp;
         switch(func){
@@ -904,12 +893,14 @@ public class ResultsChartPanel extends JPanel {
 
     private void jButtonSetCheckpointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSetCheckpointsActionPerformed
         // TODO add your handling code here:
-
-        Checkpoints newChps = new Checkpoints(new JFrame(), true, this.task); //Pass task.checkpoints to constructor
-        newChps.showDialog();
-        if (newChps.hasResults()) { //extract chart(Plotter.java) in Checkpoints
-            String s = task.getCheckpoints();
-            Plotter p = new Plotter(this.task.getTaskID(), s, 0);
+        if (String.valueOf(task.getCheckpoints()).isEmpty()){
+            return;
+        }
+        Checkpoints Chps = new Checkpoints(new JFrame(), true, this.task);
+        Chps.showDialog();
+        if (Chps.hasResults()) { //extract chart(Plotter.java) in Checkpoints
+            StringBuilder s = task.getCheckpoints();
+            Plotter p = new Plotter(this.task.getTaskID(), String.valueOf(s), 0);
             LineChart chpChart = p.getLineChart();
             addCheckpointsToResultsChart(chpChart);
 

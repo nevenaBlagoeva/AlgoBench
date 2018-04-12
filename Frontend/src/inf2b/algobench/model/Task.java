@@ -95,7 +95,7 @@ public class Task implements Serializable {
     private String timeDelete;
     private String nodeLevel;
     private String treeHight;
-    private String checkpoints;
+    private StringBuilder checkpoints;
     
     private String notes; 
     protected Integer status;
@@ -184,11 +184,11 @@ public class Task implements Serializable {
         this.checkpoints = other.checkpoints;
     }
     
-    public void setCheckpoints(String checkpoints) {
+    public void setCheckpoints(StringBuilder checkpoints) {
         this.checkpoints = checkpoints;
     }
 
-    public String getCheckpoints() {
+    public StringBuilder getCheckpoints() {
         return checkpoints;
     }
 

@@ -5,7 +5,10 @@
  */
 package inf2b.algobench.ui;
 
+import inf2b.algobench.main.AlgoBench;
 import inf2b.algobench.model.Task; 
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
@@ -25,8 +28,8 @@ public class Checkpoints extends javax.swing.JDialog {
         this.task = task;
         initComponents();
         
-        
-        
+        setLayout();
+    
     }
     
 
@@ -249,14 +252,14 @@ public class Checkpoints extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
-           this.hasResults = true;
            this.dispose();
         
         
     }//GEN-LAST:event_jButton2ActionPerformed
     
     public boolean hasResults(){
-        return this.hasResults;
+        hasResults = !String.valueOf(task.getCheckpoints()).isEmpty();
+        return hasResults;
     }
     
     
@@ -278,6 +281,16 @@ public class Checkpoints extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jCheckBox2ActionPerformed
 
+    private void setLayout(){
+        
+        if (task.getAlgorithmCode().equals(AlgoBench.properties.getProperty("INTERNAL_MERGESORT"))){
+            jPanelMergeSort.setVisible(true);
+        }
+        
+        // More algorithms to be added
+        
+        
+    }
     /**
      * @param args the command line arguments
      */

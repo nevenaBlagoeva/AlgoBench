@@ -72,7 +72,7 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
     protected int responseLineCount;
     private Task task;
     protected TaskOverviewPanel taskPanel;
-    protected String checkpoints;
+    protected StringBuilder checkpoints;
     // contains XChartPanel, a 3rd party library that's not serialisable
     // so skip during serialisation and reinitialise later
     transient protected ResultsChartPanel resultChartPanel;
@@ -85,6 +85,7 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
 
     public TaskMaster(Task task) {
         this.response = new StringBuilder();
+        this.checkpoints = new StringBuilder();
         this.setState(TaskState.QUEUED);
         this.task = task;
         this.lastView = TaskView.OVERVIEW;
@@ -100,6 +101,7 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
     public TaskMaster(TaskMaster tM)
     {
         this.response = tM.response;
+        this.checkpoints = tM.checkpoints;
         this.setState(tM.state);
         this.task = new Task(tM.task);
         this.lastView = tM.lastView;
@@ -179,21 +181,16 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
             // no more than just the headings
             return;
         }
-        
-        System.out.printf("RESULTS HERE!!!! %s", String.valueOf(response));
-        
+                
         String[] parts = parseResponse();
             
         response = new StringBuilder(parts[0]);
-        // If there are saved checkpoints use them. Needed when loading archived task
-        if (this.checkpoints==null){
-            this.checkpoints = parts[1];
-        }
+        checkpoints = new StringBuilder(parts[1]);
         
         this.task.setCheckpoints(checkpoints);
             
-        System.out.printf("RESPONSE>>>>>> %s",String.valueOf(response));
-        System.out.printf("CHECKPOINTS>>>>>>> %s",String.valueOf(checkpoints));
+        //System.out.printf("RESPONSE>>>>>> %s",String.valueOf(response));
+        //System.out.printf("CHECKPOINTS>>>>>>> %s",String.valueOf(checkpoints));
         
         // instantiate and populate table and chart
         Plotter p;
@@ -202,7 +199,7 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
             p.setYAxisLabel("Bucket Size");
             p.setXAxisLabel("Bucket");
             // additional bar chart for Hash results
-            resultChartPanel = new ResultsChartPanel(task.getTaskID(), task, checkpoints);
+            resultChartPanel = new ResultsChartPanel(task.getTaskID(), task);
             resultChartPanel.addBarChart(p.getBarChart());
             resultTablePanel = new ResultsTablePanel(String.valueOf(response), this.getTaskID(), true, "");
             // show averages (for Hashing)
@@ -225,7 +222,7 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
                 p.setYAxisLabel("Time (ms)");
             }
             p.setXAxisLabel("Input Size");
-            resultChartPanel = new ResultsChartPanel(task.getTaskID(), task, checkpoints);
+            resultChartPanel = new ResultsChartPanel(task.getTaskID(), task);
             resultChartPanel.addResultChart(p.getLineChart());
             resultChartPanel.sethasAverage(p.hasAverage());
             if(task.getAlgorithmGroup(true).equals("SEARCH") || task.getAlgorithmGroup(true).equals("TREE")){
@@ -243,6 +240,10 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
     public String[] parseResponse(){
         
         String r = this.response.toString();
+        String ch = this.checkpoints.toString();
+        if (!ch.isEmpty()){
+            return new String[] {r,ch};
+        }
         String[] lines = r.split("\n");
         String[] titles = lines[0].split("\t");
         Vector<Integer> runs = new Vector<Integer>();
@@ -383,8 +384,6 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
                             break;
                         default:
                             response.append(responseLine.trim());
-                            System.out.printf("\nThis is RESPONSELINE : %s",String.valueOf(responseLine.trim()));
-                            System.out.printf("\nThis is RESPONSE : %s",String.valueOf(response));
                             response.append("\n");
                             ++responseLineCount;
                             break;
@@ -477,9 +476,6 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
         return this.state;
     }
     
-    public String getCheckpoints(){
-        return this.checkpoints;
-    }
     
     public final synchronized void setState(TaskState taskState) {
         this.state = taskState;

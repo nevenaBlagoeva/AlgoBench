@@ -898,7 +898,7 @@ public class ResultsChartPanel extends JPanel {
         }
         Checkpoints Chps = new Checkpoints(new JFrame(), true, this.task);
         Chps.showDialog();
-        if (Chps.hasResults()) { //extract chart(Plotter.java) in Checkpoints
+        if (Chps.hasResults()&&Chps.setRequested) { //extract chart(Plotter.java) in Checkpoints
             StringBuilder s = task.getCheckpoints();
             Plotter p = new Plotter(this.task.getTaskID(), String.valueOf(s), 0);
             LineChart chpChart = p.getLineChart();

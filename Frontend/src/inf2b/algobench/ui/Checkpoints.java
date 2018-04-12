@@ -18,6 +18,7 @@ public class Checkpoints extends javax.swing.JDialog {
     
     
     boolean hasResults;
+    boolean setRequested;
     private static Task task;
     /**
      * Creates new form Checkpoints
@@ -25,6 +26,7 @@ public class Checkpoints extends javax.swing.JDialog {
     public Checkpoints(java.awt.Frame parent, boolean modal, Task task) {
         super(parent, modal);
         this.hasResults = false;
+        this.setRequested = false;
         this.task = task;
         initComponents();
         
@@ -48,16 +50,18 @@ public class Checkpoints extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
+        jCheckBoxMergeBegin = new javax.swing.JCheckBox();
+        jCheckBoxMergeEnd = new javax.swing.JCheckBox();
+        jCheckBoxMergeLine = new javax.swing.JCheckBox();
+        jPanelNavigationButtons = new javax.swing.JPanel();
+        jButtonCancel = new javax.swing.JButton();
+        jButtonOK = new javax.swing.JButton();
+        jPanelMessage = new javax.swing.JPanel();
+        jLabelMessage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jPanelSetUp.setForeground(java.awt.Color.white);
 
         jPanelMergeSort.setBackground(java.awt.Color.white);
 
@@ -69,28 +73,28 @@ public class Checkpoints extends javax.swing.JDialog {
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/inf2b/algobench/images/mergeSort.png"))); // NOI18N
 
-        jCheckBox1.setAlignmentY(0.0F);
-        jCheckBox1.setAutoscrolls(true);
-        jCheckBox1.setIconTextGap(0);
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        jCheckBoxMergeBegin.setAlignmentY(0.0F);
+        jCheckBoxMergeBegin.setAutoscrolls(true);
+        jCheckBoxMergeBegin.setIconTextGap(0);
+        jCheckBoxMergeBegin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                jCheckBoxMergeBeginActionPerformed(evt);
             }
         });
 
-        jCheckBox2.setAlignmentY(0.0F);
-        jCheckBox2.setIconTextGap(0);
-        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
+        jCheckBoxMergeEnd.setAlignmentY(0.0F);
+        jCheckBoxMergeEnd.setIconTextGap(0);
+        jCheckBoxMergeEnd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox2ActionPerformed(evt);
+                jCheckBoxMergeEndActionPerformed(evt);
             }
         });
 
-        jCheckBox3.setAlignmentY(0.0F);
-        jCheckBox3.setIconTextGap(0);
-        jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
+        jCheckBoxMergeLine.setAlignmentY(0.0F);
+        jCheckBoxMergeLine.setIconTextGap(0);
+        jCheckBoxMergeLine.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox3ActionPerformed(evt);
+                jCheckBoxMergeLineActionPerformed(evt);
             }
         });
 
@@ -100,21 +104,21 @@ public class Checkpoints extends javax.swing.JDialog {
             jPanelMergeSortLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMergeSortLayout.createSequentialGroup()
                 .addGap(67, 67, 67)
-                .addComponent(jCheckBox3)
+                .addComponent(jCheckBoxMergeLine)
                 .addGap(0, 0, 0)
                 .addComponent(jLabel4)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMergeSortLayout.createSequentialGroup()
-                .addContainerGap(86, Short.MAX_VALUE)
+                .addGap(86, 86, 86)
                 .addGroup(jPanelMergeSortLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanelMergeSortLayout.createSequentialGroup()
                         .addGroup(jPanelMergeSortLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanelMergeSortLayout.createSequentialGroup()
                                 .addComponent(jLabel3)
-                                .addGap(77, 77, 77))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE))
                             .addGroup(jPanelMergeSortLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jCheckBox1)
-                                .addComponent(jCheckBox2, javax.swing.GroupLayout.Alignment.LEADING)))
+                                .addComponent(jCheckBoxMergeBegin)
+                                .addComponent(jCheckBoxMergeEnd, javax.swing.GroupLayout.Alignment.LEADING)))
                         .addComponent(jLabel1))
                     .addGroup(jPanelMergeSortLayout.createSequentialGroup()
                         .addComponent(jLabel2)
@@ -133,92 +137,92 @@ public class Checkpoints extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelMergeSortLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel4)
-                            .addComponent(jCheckBox3))
+                            .addComponent(jCheckBoxMergeLine))
                         .addGap(198, 198, 198))
                     .addGroup(jPanelMergeSortLayout.createSequentialGroup()
                         .addGroup(jPanelMergeSortLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(jPanelMergeSortLayout.createSequentialGroup()
-                                .addComponent(jCheckBox1)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelMergeSortLayout.createSequentialGroup()
+                                .addComponent(jCheckBoxMergeBegin)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jCheckBox2))
+                                .addComponent(jCheckBoxMergeEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel1))
                         .addGap(26, 26, 26))))
         );
 
-        jPanel1.setBackground(java.awt.Color.white);
+        jPanelNavigationButtons.setBackground(java.awt.Color.white);
 
-        jButton1.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jButton1.setText("Cancel");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCancel.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jButtonCancel.setText("Cancel");
+        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonCancelActionPerformed(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jButton2.setText("OK");
-        jButton2.setEnabled(false);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonOK.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jButtonOK.setText("OK");
+        jButtonOK.setEnabled(false);
+        jButtonOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButtonOKActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelNavigationButtonsLayout = new javax.swing.GroupLayout(jPanelNavigationButtons);
+        jPanelNavigationButtons.setLayout(jPanelNavigationButtonsLayout);
+        jPanelNavigationButtonsLayout.setHorizontalGroup(
+            jPanelNavigationButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelNavigationButtonsLayout.createSequentialGroup()
                 .addGap(134, 134, 134)
-                .addComponent(jButton1)
+                .addComponent(jButtonCancel)
                 .addGap(44, 44, 44)
-                .addComponent(jButton2)
+                .addComponent(jButtonOK)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+        jPanelNavigationButtonsLayout.setVerticalGroup(
+            jPanelNavigationButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelNavigationButtonsLayout.createSequentialGroup()
+                .addGroup(jPanelNavigationButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonCancel)
+                    .addComponent(jButtonOK))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.setBackground(java.awt.Color.white);
+        jPanelMessage.setBackground(java.awt.Color.white);
 
-        jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
-        jLabel5.setText("Please select checkpoints :");
+        jLabelMessage.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        jLabelMessage.setText("Please select checkpoints :");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelMessageLayout = new javax.swing.GroupLayout(jPanelMessage);
+        jPanelMessage.setLayout(jPanelMessageLayout);
+        jPanelMessageLayout.setHorizontalGroup(
+            jPanelMessageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelMessageLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+        jPanelMessageLayout.setVerticalGroup(
+            jPanelMessageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabelMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanelSetUpLayout = new javax.swing.GroupLayout(jPanelSetUp);
         jPanelSetUp.setLayout(jPanelSetUpLayout);
         jPanelSetUpLayout.setHorizontalGroup(
             jPanelSetUpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelMergeSort, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanelMergeSort, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanelNavigationButtons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanelMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelSetUpLayout.setVerticalGroup(
             jPanelSetUpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSetUpLayout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanelMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jPanelMergeSort, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanelNavigationButtons, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
 
@@ -236,26 +240,26 @@ public class Checkpoints extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void jCheckBoxMergeBeginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMergeBeginActionPerformed
         //setUpMergeSort();
-        if (jCheckBox1.isSelected()){
+        if (jCheckBoxMergeBegin.isSelected()){
             MergeSortSelectAll();
         } else{
             MergeSortUnselectAll();
         }
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }//GEN-LAST:event_jCheckBoxMergeBeginActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         // TODO add your handling code here:
         this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonCancelActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
+    private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
+           setRequested = true;
            this.dispose();
         
         
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButtonOKActionPerformed
     
     public boolean hasResults(){
         hasResults = !String.valueOf(task.getCheckpoints()).isEmpty();
@@ -263,23 +267,23 @@ public class Checkpoints extends javax.swing.JDialog {
     }
     
     
-    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
+    private void jCheckBoxMergeLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMergeLineActionPerformed
         //setUpMergeSort();
-        if (jCheckBox3.isSelected()){
+        if (jCheckBoxMergeLine.isSelected()){
             MergeSortSelectAll();
         } else{
             MergeSortUnselectAll();
         }
-    }//GEN-LAST:event_jCheckBox3ActionPerformed
+    }//GEN-LAST:event_jCheckBoxMergeLineActionPerformed
 
-    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+    private void jCheckBoxMergeEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMergeEndActionPerformed
         //setUpMergeSort();
-        if (jCheckBox2.isSelected()){
+        if (jCheckBoxMergeEnd.isSelected()){
             MergeSortSelectAll();
         } else{
             MergeSortUnselectAll();
         }
-    }//GEN-LAST:event_jCheckBox2ActionPerformed
+    }//GEN-LAST:event_jCheckBoxMergeEndActionPerformed
 
     private void setLayout(){
         
@@ -342,32 +346,32 @@ public class Checkpoints extends javax.swing.JDialog {
     }
     
     public void MergeSortSelectAll(){
-        jCheckBox1.setSelected(true);
-        jCheckBox2.setSelected(true);
-        jCheckBox3.setSelected(true);
-        jButton2.setEnabled(true);
+        jCheckBoxMergeBegin.setSelected(true);
+        jCheckBoxMergeEnd.setSelected(true);
+        jCheckBoxMergeLine.setSelected(true);
+        jButtonOK.setEnabled(true);
     }
     public void MergeSortUnselectAll(){
-        jCheckBox1.setSelected(false);
-        jCheckBox2.setSelected(false);
-        jCheckBox3.setSelected(false);
-        jButton2.setEnabled(false);
+        jCheckBoxMergeBegin.setSelected(false);
+        jCheckBoxMergeEnd.setSelected(false);
+        jCheckBoxMergeLine.setSelected(false);
+        jButtonOK.setEnabled(false);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonOK;
+    private javax.swing.JCheckBox jCheckBoxMergeBegin;
+    private javax.swing.JCheckBox jCheckBoxMergeEnd;
+    private javax.swing.JCheckBox jCheckBoxMergeLine;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel jLabelMessage;
     private javax.swing.JPanel jPanelMergeSort;
+    private javax.swing.JPanel jPanelMessage;
+    private javax.swing.JPanel jPanelNavigationButtons;
     private javax.swing.JPanel jPanelSetUp;
     // End of variables declaration//GEN-END:variables
 

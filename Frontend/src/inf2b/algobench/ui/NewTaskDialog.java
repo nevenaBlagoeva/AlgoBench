@@ -1545,8 +1545,8 @@ public class NewTaskDialog extends JDialog {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel67)
                         .addGap(18, 18, 18)
-                        .addComponent(jComboBoxRangeTo, 0, 104, Short.MAX_VALUE)
-                        .addGap(24, 24, 24))
+                        .addComponent(jComboBoxRangeTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8))
                     .addComponent(jLabelErrorRange, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addGroup(jPanelQueueInputLayout.createSequentialGroup()
                 .addContainerGap()
@@ -4131,8 +4131,9 @@ public class NewTaskDialog extends JDialog {
                     this.task.setInputStepSize(Long.parseLong(this.jComboBoxStep.getSelectedItem().toString()));
                     this.task.setInputDistribution("RANDOM");
                     this.task.setSearchKeyType("Not needed");
-                    this.task.setNumRuns();
-                    //this.task.setNumRepeats(Integer.parseInt(this.jComboBoxNumRepeatsSearch.getSelectedItem().toString()));
+                    this.task.setNumRuns((Integer.parseInt(this.jComboBoxRangeTo.getSelectedItem().toString())-
+                            Integer.parseInt(this.jComboBoxRangeFrom.getSelectedItem().toString()))/
+                            Integer.parseInt(this.jComboBoxStep.getSelectedItem().toString()));
                     break;
                     
                 default:

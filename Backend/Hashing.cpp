@@ -7,11 +7,12 @@ void Hashing::printResults()
     auto t = time( NULL );
     m_outputFile.open( "output/hashing" + std::to_string(t) + ".txt" );
     m_bucket.printBucket( m_outputFile );
-    //bucket.printBucket(ss);
-    //output = ss.str();
+    m_bucket.printBucket(ss);
+    m_output = ss.str();
 }
 
-size_t Hashing::defaultGoodHash( const std::string& key ) 
+
+size_t Hashing::defaultGoodHash( const std::string& key )
 {
     size_t hashValue = 0;
     for ( char c : key ) {
@@ -20,13 +21,13 @@ size_t Hashing::defaultGoodHash( const std::string& key )
     return hashValue;
 }
 
-size_t Hashing::defaultBadHash( const std::string& key ) 
+size_t Hashing::defaultBadHash( const std::string& key )
 {
     std::hash< unsigned char > hashFunc;
     return hashFunc( key[ 0 ] );
 }
 
-void Hashing::operator()() 
+void Hashing::operator()()
 {
     std::cout << "[TASKRUNNER] Hashing..." << std::endl;
     //if (hashFunction == NULL) {

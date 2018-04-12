@@ -1,82 +1,67 @@
-/*
- * Created by Yufen Wang.
- * 2016
+/**
+ *
+ * @authors Yufen WANG(2016) and Nevena Blagoeva(2018)
+ * 
  */
 
 package inf2b.algobench.model;
 
-import com.xeiam.xchart.Chart;
-import com.xeiam.xchart.Series;
-import com.xeiam.xchart.StyleManager;
-import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYSeries;
 
-/**
- *
- * @author Yufen WANG
- */
-public class MyChart extends Chart{
+public class LineChart extends XYChart{
     
-    private Map<String, Series> All_series = new LinkedHashMap<>();
+    private Map<String, XYSeries> All_series = new LinkedHashMap<>();
     
-    public MyChart(int width, int height) {
+    public LineChart(int width, int height) {
         super(width, height);
     }
     
-    public MyChart(MyChartBuilder builder){
+    public LineChart(LineChartBuilder builder){
         super(builder.width,builder.height,builder.getTheme());
-        this.setChartTitle(builder.title);
+        this.setTitle(builder.title);
         this.setXAxisTitle(builder.xAxisTitle);
         this.setYAxisTitle(builder.yAxisTitle);
-        StyleManager sm = this.getStyleManager();
-        sm.setChartType(builder.chartType);
     }
     
-    public Series addSeries(String seriesName, Series series){
+    public XYSeries addSeries(String seriesName, XYSeries series){
         super.addSeries(seriesName, series.getXData(), series.getYData());
-        Map<String, Series> seriesMap = super.getSeriesMap();
-        Series s = seriesMap.get(seriesName);
+        Map<String, XYSeries> seriesMap = super.getSeriesMap();
+        XYSeries s = seriesMap.get(seriesName);
         All_series.put(seriesName, s);
         return s;
     }
     
     @Override
-    public Series addSeries(String seriesName, double[] xData, double[] yData){
+    public XYSeries addSeries(String seriesName, double[] xData, double[] yData){
         super.addSeries(seriesName, xData, yData);
-        Map<String, Series> seriesMap = super.getSeriesMap();
-        Series series = seriesMap.get(seriesName);
+        Map<String, XYSeries> seriesMap = super.getSeriesMap();
+        XYSeries series = seriesMap.get(seriesName);
         All_series.put(seriesName, series);
         return series;
     }
     
-    @Override
-    public Series addSeries(String seriesName, Collection<?> xData, Collection<? extends Number> yData) {
+    @Override 
+    public XYSeries addSeries(String seriesName, List<?> xData, List<? extends Number> yData) {
         super.addSeries(seriesName, xData, yData);
-        Map<String, Series> seriesMap = super.getSeriesMap();
-        Series series = seriesMap.get(seriesName);
+        Map<String, XYSeries> seriesMap = super.getSeriesMap();
+        XYSeries series = seriesMap.get(seriesName);
         All_series.put(seriesName, series);
         return series;
-    }
-    
-    /*
-    * this series can not show again.
-    */
-    public void removeSeries(String seriesName){
-        Map<String, Series> seriesMap = super.getSeriesMap();
-        seriesMap.remove(seriesName);
-        All_series.remove(seriesName);
     }
     
     public boolean showSeries(String seriesName){
-        Series series = All_series.get(seriesName);
+        XYSeries series = All_series.get(seriesName);
         if(series == null){
             System.out.println(seriesName +" not exists in All_series");
             return false;
         }
-        Map<String, Series> seriesMap = super.getSeriesMap();
+        Map<String, XYSeries> seriesMap = super.getSeriesMap();
         if(seriesMap.get(seriesName) != null){
             System.out.println(seriesName +" alredy exists");
             return false;
@@ -85,31 +70,31 @@ public class MyChart extends Chart{
         return true;
     }
     
-    public void showAll(){
-        Map<String, Series> seriesMap = super.getSeriesMap();
+    public void showAllSeries(){
+        Map<String, XYSeries> seriesMap = super.getSeriesMap();
         seriesMap.clear();
         seriesMap.putAll(this.All_series);
     }
     
     public boolean showOnlyAverage(){
-        Series series = All_series.get("Average");
+        XYSeries series = All_series.get("Average");
         if(series == null){
             System.out.println("Average series do not exists in All_series");
             return false;
         }
-        Map<String, Series> seriesMap = super.getSeriesMap();
+        Map<String, XYSeries> seriesMap = super.getSeriesMap();
         seriesMap.clear();
         seriesMap.put("Average", series);
         return true;
     }
     
     public boolean showWithoutAverage(){
-        Series series = All_series.get("Average");
+        XYSeries series = All_series.get("Average");
         if(series == null){
             System.out.println("Average series do not exists");
             return false;
         }
-        Map<String, Series> seriesMap = super.getSeriesMap();
+        Map<String, XYSeries> seriesMap = super.getSeriesMap();
         seriesMap.clear();
         seriesMap.putAll(this.All_series);
         seriesMap.remove("Average");
@@ -117,13 +102,13 @@ public class MyChart extends Chart{
     }
     
     public void showAsModel(DefaultListModel<JCheckBox> model){
-        Map<String, Series> seriesMap = super.getSeriesMap();
+        Map<String, XYSeries> seriesMap = super.getSeriesMap();
         seriesMap.clear();
         for(int i=0; i<model.size(); i++){
            JCheckBox c = (JCheckBox)model.getElementAt(i);
            if(c.isSelected()){
                String key = c.getText();
-               Series value = this.All_series.get(key);
+               XYSeries value = this.All_series.get(key);
                seriesMap.put(key,value);
            }
         }
@@ -136,7 +121,7 @@ public class MyChart extends Chart{
         return this.getSeriesMap().size();
     }
     
-    public Map<String, Series> getAllSeriesMap() {
+    public Map<String, XYSeries> getAllSeriesMap() {
         return this.All_series;
     }
     
@@ -144,8 +129,8 @@ public class MyChart extends Chart{
     just hide not delet this series, can invoke showSeries method to show again.
     */
     public boolean hideSeries(String seriesName){
-        Map<String, Series> seriesMap = super.getSeriesMap();
-        Series series = seriesMap.get(seriesName);
+        Map<String, XYSeries> seriesMap = super.getSeriesMap();
+        XYSeries series = seriesMap.get(seriesName);
         if(series == null) return false;
         seriesMap.remove(seriesName);
         return true;

@@ -32,15 +32,15 @@
 
 namespace inf2b
 {
-    class Hashing 
+    class Hashing
     {
     public:
         // TODO: allow custom functions to be supplied from frontend
         Hashing( PairList& input, size_t bucketSize, int hashType, std::string& output )
-            : m_input(input), 
+            : m_input(input),
               m_bucket( bucketSize, input.size()),
               m_hashType( hashType ),
-              m_output( output ) 
+              m_output( output )
             {}
 
         Hashing( Hashing& rhs ) = delete;
@@ -51,10 +51,10 @@ namespace inf2b
         size_t defaultBadHash( const std::string& key );
 
         void operator()();
-        
+
     private:
         void printResults();
-                
+
         long m_recursionCounter;
         long m_executionCount;
         long m_maxRecursionDepth;

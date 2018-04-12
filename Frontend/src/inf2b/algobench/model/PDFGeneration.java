@@ -27,7 +27,8 @@
 
 package inf2b.algobench.model;
 
-import com.xeiam.xchart.BitmapEncoder;
+//import com.xeiam.xchart.BitmapEncoder;
+import org.knowm.xchart.BitmapEncoder;
 import inf2b.algobench.main.AlgoBench;
 import java.io.File;
 import java.io.OutputStream;
@@ -35,9 +36,7 @@ import java.io.StringReader;
 
 import inf2b.algobench.model.Task;
 import inf2b.algobench.model.TaskMaster;
-import inf2b.algobench.model.MyChart;
-import inf2b.algobench.ui.ResultsChartPanel;
-import inf2b.algobench.ui.components.TreeTaskSubPanel;
+
 
 //JAXP
 import javax.xml.transform.Transformer;
@@ -52,6 +51,8 @@ import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
+import org.knowm.xchart.CategoryChart;
+import org.knowm.xchart.XYChart;
 
 public class PDFGeneration {
 
@@ -76,7 +77,7 @@ public class PDFGeneration {
     public String generatePDF(TaskMaster tM)
     {
         Task task = tM.getTask();
-        MyChart chart = tM.getResultsChartPanel().getChart();
+        //XYChart chart = tM.getResultsChartPanel().getChart();
         try {
             System.out.println("Generating PDF for " + task.getAlgorithm());
 
@@ -89,7 +90,15 @@ public class PDFGeneration {
             // generate runtime chart
             String chartID = "image.jpg";
             File saveFile = new File(baseDir, "images/" + chartID);
-            BitmapEncoder.saveBitmap(chart, saveFile.getCanonicalPath(), BitmapEncoder.BitmapFormat.JPG);
+            
+            if(task.getAlgorithmGroup().equals("HASH")){
+                CategoryChart chart = tM.getResultsChartPanel().getBarChart();
+                BitmapEncoder.saveBitmap(chart, saveFile.getCanonicalPath(), BitmapEncoder.BitmapFormat.JPG);
+            } else {
+                XYChart chart = tM.getResultsChartPanel().getChart();
+                BitmapEncoder.saveBitmap(chart, saveFile.getCanonicalPath(), BitmapEncoder.BitmapFormat.JPG);
+            }
+            //BitmapEncoder.saveBitmap(chart, saveFile.getCanonicalPath(), BitmapEncoder.BitmapFormat.JPG);
 
             //get xml source code
             String xmlSrc = getXMLSourceCode(task);
@@ -183,20 +192,22 @@ public class PDFGeneration {
     private String generateXMLForTask(Task t)
     {
         StringBuilder sb = new StringBuilder();
-
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "\n<data>"
-                + "\n<task-name>" + t.getAlgorithm() + "</task-name>"
-                + "\n<input-size>" + t.getInputFinalSize() + "</input-size>"
-                + "\n<memory-footprint>" + t.getMemoryFootprint() + "</memory-footprint>"
-                + "\n<scheduled-tasks>" + t.getNumRuns() + "</scheduled-tasks>"
-                + "\n<completed-tasks>" + t.getNumCompletedRuns()+ "</completed-tasks>"
-                + "\n<initial-size>" + t.getInputStartSize() + "</initial-size>"
-                + "\n<final-size>" + t.getInputFinalSize() + "</final-size>"
-                + "\n<step-size>" + t.getInputStepSize() + "</step-size>"
-                + "\n<notes>" + t.getNotes() + "</notes>"
+                    + "\n<data>"
+                    + "\n<task-name>" + t.getAlgorithm() + "</task-name>"
+                    );
+        
+        if(!t.getAlgorithmGroup().equals("HASH")){
+            sb.append("\n<input-size>" + t.getInputFinalSize() + "</input-size>"
+                    + "\n<memory-footprint>" + t.getMemoryFootprint() + "</memory-footprint>"
+                    + "\n<scheduled-tasks>" + t.getNumRuns() + "</scheduled-tasks>"
+                    + "\n<completed-tasks>" + t.getNumCompletedRuns()+ "</completed-tasks>"
+                    + "\n<initial-size>" + t.getInputStartSize() + "</initial-size>"
+                    + "\n<final-size>" + t.getInputFinalSize() + "</final-size>"
+                    + "\n<step-size>" + t.getInputStepSize() + "</step-size>"
+                    + "\n<notes>" + t.getNotes() + "</notes>"
             );
-
+        }
         if (t.getAlgorithmGroup().equals("GRAPH")) {
             sb.append("\n<graph-fixed-size>" + t.getFixedGraphSize() + "</graph-fixed-size>"
                     + "\n<graph-fixed-edges>" + t.getFixedGraphParam(true) + "</graph-fixed-edges>"
@@ -206,10 +217,14 @@ public class PDFGeneration {
                 );
         }
         else if (t.getAlgorithmGroup().equals("HASH")) {
-            sb.append("\n<hash-bucket-array-size>" + Integer.toString(t.getHashBucketSize()) + "</hash-bucket-array-size>"
-                    + "\n<hash-key-type>" + t.getHashKeyType(false) + "</hash-key-type>"
-                    + "\n<hash-function-a" + t.getHashparameters('a') + "</hash-function-a>"
-                    + "\n<hash-function-b>" + t.getHashparameters('b') + "</hash-function-b>"
+            sb.append("\n<initial-size>" + t.getInputStartSize() + "</initial-size>"  // Input Setup Details
+                    + "\n<hash-bucket-array-size>" + Integer.toString(t.getHashBucketSize()) + "</hash-bucket-array-size>"
+                    + "\n<hash-key-type>" + t.getHashKeyType(true) + "</hash-key-type>"
+                    + "\n<hash-function>" + t.getHashFunction() + "</hash-function>"
+                    + "\n<hash-max-bucket-size>" + t.getMaxBucketSize() + "</hash-max-bucket-size>" //Execution Progress Details
+                    + "\n<hash-min-bucket-size>" + t.getMinBucketSize() + "</hash-min-bucket-size>"
+                    + "\n<hash-avg-bucket-size>" + t.getAverageBucketSize() + "</hash-avg-bucket-size>"
+                    + "\n<hash-std>" + t.getSTDHash() + "</hash-std>"            
                 );
         }
         else if (t.getAlgorithmGroup().equals("SORT")) {

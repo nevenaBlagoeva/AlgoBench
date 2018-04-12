@@ -29,13 +29,13 @@
 
 package inf2b.algobench.ui;
 
-import com.xeiam.xchart.BitmapEncoder;
-import com.xeiam.xchart.BitmapEncoder.BitmapFormat;
-import com.xeiam.xchart.Series;
-import com.xeiam.xchart.StyleManager.ChartType;
-import com.xeiam.xchart.XChartPanel;
+import org.knowm.xchart.XChartPanel;
+import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.BitmapEncoder;
+import org.knowm.xchart.BitmapEncoder.BitmapFormat;
+
 import inf2b.algobench.main.AlgoBench;
-import inf2b.algobench.model.MyChart;
+import inf2b.algobench.model.LineChart;
 import inf2b.algobench.util.CheckBoxListRenderer;
 import java.io.File;
 import java.io.IOException;
@@ -57,10 +57,11 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import inf2b.algobench.ui.MainWindow;
 import inf2b.algobench.model.Task;
-import inf2b.algobench.model.TaskMaster;
-import inf2b.algobench.model.PDFGeneration;
+import javax.swing.JFrame;
+import inf2b.algobench.model.Plotter;
+import org.knowm.xchart.CategoryChart;
+import org.knowm.xchart.CategorySeries;
 
 /**
  * Holds and displays the charts of runtimes, with buttons for extra stuff like
@@ -69,10 +70,14 @@ import inf2b.algobench.model.PDFGeneration;
  */
 public class ResultsChartPanel extends JPanel {
 
-    MyChart chart;
+    LineChart chart;
+    CategoryChart barChart;
     String taskID;
+    Task task;
     ButtonGroup showbgroup;
     boolean hasAverage;
+    String checkpoints;
+    Vector<Integer> checkpoitsIndex;
     private DefaultListModel<JCheckBox> seriesListModel;
 
     /**
@@ -80,27 +85,43 @@ public class ResultsChartPanel extends JPanel {
      *
      * @param taskID
      */
-    public ResultsChartPanel(String taskID) {
+    public ResultsChartPanel(String taskID, Task task, String checkpoints) {
         initComponents();
         this.taskID = taskID;
+        this.task = task;
+        this.checkpoints = task.getCheckpoints();
+        this.checkpoitsIndex = new Vector<Integer>();
         this.seriesListModel = new DefaultListModel<>();
-        
+
         showbgroup = new ButtonGroup();
         showbgroup.add(this.jRadioShowall);
         showbgroup.add(this.jRadioShowaverage);
         showbgroup.add(this.jRadioWithoutaverage);
         showbgroup.add(this.jRadioButtonCustomshows);
-        
+
         this.jRadioShowall.setEnabled(false);
         this.jRadioShowaverage.setEnabled(false);
         this.jRadioWithoutaverage.setEnabled(false);
         this.jRadioButtonCustomshows.setEnabled(false);
-        
+
         this.jLabel3.setVisible(false);
         this.jComboBoxBoundary1.setVisible(false);
         this.jLabel4.setVisible(false);
         this.jTextFieldParam1.setVisible(false);
-        
+
+        // Checkpoints option availabe (implemented for Internal MergeSort)
+        if (task.getAlgorithmCode().equals(AlgoBench.properties.getProperty("INTERNAL_MERGESORT"))){
+            jButtonSetCheckpoints.setVisible(true);
+            jButtonRemoveCheckpoints.setVisible(true);
+            jButtonSetCheckpoints.setEnabled(true);
+            jButtonRemoveCheckpoints.setEnabled(false);
+        } else {
+            jButtonSetCheckpoints.setVisible(false);
+            jButtonRemoveCheckpoints.setVisible(false);
+            jButtonSetCheckpoints.setEnabled(false);
+            jButtonRemoveCheckpoints.setEnabled(false);
+        }
+
         this.jTextFieldParam.getDocument().addDocumentListener(new DocumentListener(){
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -131,41 +152,187 @@ public class ResultsChartPanel extends JPanel {
         });
     }
 
-    public MyChart getChart()
+    public LineChart getChart()
     {
-        return chart;
+            return chart;
     }
-    public void addResultChart(MyChart chart){
+    public CategoryChart getBarChart(){
+            return barChart;
+    }
+    public void addResultChart(LineChart chart){
         this.chart = chart;
         jPanelChartHolder.add(new XChartPanel(chart),"chart");
         this.jRadioShowall.setEnabled(true);
         this.jRadioShowall.setSelected(true);
-        
-        Iterator<Map.Entry<String, Series>> entries = chart.getSeriesMap().entrySet().iterator();
+
+        Iterator<Map.Entry<String, XYSeries>> entries = chart.getSeriesMap().entrySet().iterator();
         while(entries.hasNext()){
-            Map.Entry<String, Series> entry = entries.next();
+            Map.Entry<String, XYSeries> entry = entries.next();
             String s = entry.getKey();
             seriesListModel.addElement(new JCheckBox(s));
         }
         jListSeries.setModel(seriesListModel);
         jListSeries.setCellRenderer(new CheckBoxListRenderer());
-        
+
         for(int i=0; i<seriesListModel.size(); i++){
             JCheckBox c = (JCheckBox)seriesListModel.getElementAt(i);
             c.setSelected(true);
         }
         setSeriesListEnable(false);
-        
-        if(chart.getStyleManager().getChartType().equals(ChartType.Bar)){
-            this.jTextFieldParam.setVisible(false);
-            this.jComboBoxBoundary.setVisible(false);
-            this.jLabel1.setVisible(false);
-            this.jLabel2.setVisible(false);
-            this.jCheckBoxAdd.setVisible(false);
-        }
-        
+
     }
-    
+
+
+    public void addBarChart(CategoryChart b){
+        this.barChart = b;
+        jPanelChartHolder.add(new XChartPanel(b),"chart");
+        this.jRadioShowall.setEnabled(true);
+        this.jRadioShowall.setSelected(true);
+
+        Iterator<Map.Entry<String, CategorySeries>> entries = b.getSeriesMap().entrySet().iterator();
+        while(entries.hasNext()){
+            Map.Entry<String, CategorySeries> entry = entries.next();
+            String s = entry.getKey();
+            seriesListModel.addElement(new JCheckBox(s));
+        }
+        jListSeries.setModel(seriesListModel);
+        jListSeries.setCellRenderer(new CheckBoxListRenderer());
+
+        for(int i=0; i<seriesListModel.size(); i++){
+            JCheckBox c = (JCheckBox)seriesListModel.getElementAt(i);
+            c.setSelected(true);
+        }
+        setSeriesListEnable(false);
+
+        this.jTextFieldParam.setVisible(false);
+        this.jComboBoxBoundary.setVisible(false);
+        this.jLabel1.setVisible(false);
+        this.jLabel2.setVisible(false);
+        this.jCheckBoxAdd.setVisible(false);
+    }
+
+
+    public void addCheckpointsToResultsChart(LineChart chpChart){
+        //LineChart newChart;
+        jPanelChartHolder.add(new XChartPanel(chart),"chart");
+        this.jRadioShowall.setEnabled(true);
+        this.jRadioShowall.setSelected(true);
+        seriesListModel.clear();
+
+
+        Vector<XYSeries> sersChp = new Vector<XYSeries>();
+        Vector<String> namesChp = new Vector<String>();
+
+        Iterator<Map.Entry<String, XYSeries>> entries1 = chpChart.getSeriesMap().entrySet().iterator();
+            while(entries1.hasNext()){
+                Map.Entry<String, XYSeries> entry1 = entries1.next();
+                String s1 = entry1.getKey();
+                XYSeries ser = entry1.getValue();
+                namesChp.add(s1);
+                sersChp.add(ser);
+                System.out.printf("\nCHPCHART: %s", s1);
+            }
+        Vector<XYSeries> sers = new Vector<XYSeries>();
+        Vector<String> names = new Vector<String>();
+
+        Iterator<Map.Entry<String, XYSeries>> entries = this.chart.getSeriesMap().entrySet().iterator();
+            while(entries.hasNext()){
+                Map.Entry<String, XYSeries> entry = entries.next();
+                String s = entry.getKey();
+                XYSeries ser = entry.getValue();
+                names.add(s);
+                sers.add(ser);
+                System.out.printf("\nCHART: %s",s);
+
+            }
+
+            // iterate over the current series in the chart
+            for(int i=0; i<sers.size(); i++){
+
+                // iterate over the checkpoints series
+                for(int j=0;j<sersChp.size();j++){
+
+
+                      if(names.elementAt(i)!=namesChp.elementAt(j)  // names are different
+                              && namesChp.elementAt(j).contains(names.elementAt(i)) // checkpoint title contains the run title
+                              &&  !chart.getSeriesMap().containsKey(namesChp.elementAt(j))) // the graph does not contain it
+                      {
+                          System.out.print("\n Adding expression holds\n");
+                          chart.addSeries(namesChp.elementAt(j), sersChp.elementAt(j));
+                          seriesListModel.addElement(new JCheckBox(names.elementAt(i)));
+                          seriesListModel.addElement(new JCheckBox(namesChp.elementAt(j)));
+                          // Save index for removeCheckpoints
+                          checkpoitsIndex.add(seriesListModel.indexOf(namesChp.elementAt(j)));
+                      }
+
+                }
+
+            }
+
+        jListSeries.setModel(seriesListModel);
+        jListSeries.setCellRenderer(new CheckBoxListRenderer());
+
+        for(int i=0; i<seriesListModel.size(); i++){
+            System.out.println();
+            JCheckBox c = (JCheckBox)seriesListModel.getElementAt(i);
+            c.setSelected(true);
+        }
+
+        setSeriesListEnable(true);
+
+        jRadioButtonCustomshows.setEnabled(true);
+        jRadioButtonCustomshows.setSelected(true);
+
+        jPanelChartHolder.revalidate();
+        jPanelChartHolder.repaint();
+        jListSeries.revalidate();
+        jListSeries.repaint();
+        jButtonRemoveCheckpoints.setEnabled(true);
+        jButtonSetCheckpoints.setEnabled(false);
+
+    }
+
+        private void removeCheckpoints(){
+            Vector<String> names = new Vector<String>();
+
+            Iterator<Map.Entry<String, XYSeries>> entries = this.chart.getSeriesMap().entrySet().iterator();
+            while(entries.hasNext()){
+                Map.Entry<String, XYSeries> entry = entries.next();
+                String s = entry.getKey();
+                names.add(s);
+            }
+
+            seriesListModel.clear();
+            for(int i=0; i<names.size(); i++){
+                System.out.print(names.get(i));
+                if(!names.elementAt(i).contains("Checkpoint")){   // add all checkboxes different from checkpoints
+                    seriesListModel.addElement(new JCheckBox(names.elementAt(i)));
+                } else {
+                    chart.removeSeries(names.elementAt(i)); // remove series from the graph
+                }
+            }
+            jListSeries.setModel(seriesListModel);
+            jListSeries.setCellRenderer(new CheckBoxListRenderer());
+
+            for(int i=0; i<seriesListModel.size(); i++){
+                System.out.println();
+                JCheckBox c = (JCheckBox)seriesListModel.getElementAt(i);
+                c.setSelected(true);
+            }
+
+            setSeriesListEnable(true);
+
+            jRadioButtonCustomshows.setEnabled(true);
+            jRadioButtonCustomshows.setSelected(true);
+
+            jPanelChartHolder.revalidate();
+            jPanelChartHolder.repaint();
+            jListSeries.revalidate();
+            jListSeries.repaint();
+            jButtonSetCheckpoints.setEnabled(true);
+
+    }
+
     public void sethasAverage(boolean b){
         this.hasAverage = b;
         if(b){
@@ -178,10 +345,10 @@ public class ResultsChartPanel extends JPanel {
             this.jRadioButtonCustomshows.setEnabled(false);
         }
     }
-    
+
     //return average series if no average ruturn run 1
-    public Series getAverageSeries(){
-        Series s;
+    public XYSeries getAverageSeries(){
+        XYSeries s;
         if(hasAverage){
             s = chart.getSeriesMap().get("Average");
         }else{
@@ -189,7 +356,7 @@ public class ResultsChartPanel extends JPanel {
         }
         return s;
     }
-    
+
     public void setSeriesListEnable(boolean b){
         this.jListSeries.setEnabled(b);
         for(int i=0; i<seriesListModel.size(); i++){
@@ -197,14 +364,14 @@ public class ResultsChartPanel extends JPanel {
             c.setEnabled(b);
         }
     }
-    
+
     private void displayError(String message) {
         if (message.length() > 0) {
             message = "INFO: " + message;
         }
         jTextAreaInfo.setText(message);
     }
-    
+
     private boolean validateNumberType(String number) {
         Pattern numPattern = Pattern.compile("^(\\d*\\.)?\\d+$");
         Matcher numMatcher = numPattern.matcher(number.trim());
@@ -214,7 +381,7 @@ public class ResultsChartPanel extends JPanel {
         }
         return true;
     }
-    
+
     private void updateBoundary(int Num){
         displayError("");
         double param;
@@ -228,10 +395,14 @@ public class ResultsChartPanel extends JPanel {
             param = Double.parseDouble(this.jTextFieldParam1.getText())*0.00001;
             func = (String)jComboBoxBoundary1.getSelectedItem();
         }
-        
+
         //add or update a Boundary series
-        Vector<Double> xData;
-        xData = new Vector(chart.getAllSeriesMap().get("Run 1").getXData());
+        Vector<Double> xData = new Vector();
+        for (double d:chart.getSeriesMap().get("Run 1").getXData()) xData.add(Double.valueOf(d));
+        System.out.println(chart.getSeriesMap().get("Run 1").getXData().getClass());
+        System.out.print("Iteration");
+        for (int i=0; i<xData.size(); i++) System.out.println(xData.get(i).getClass());
+        System.out.println(xData.getClass());
         Vector<Double> yData = new Vector<>();
         double tmp;
         switch(func){
@@ -241,12 +412,12 @@ public class ResultsChartPanel extends JPanel {
                 jPanelChartHolder.repaint();
                 return;
             case "1":
-                for(double x : xData){
+                for(Double x : xData){
                     yData.add(param);
                 }
                 break;
             case "logN":
-                for(double x : xData){
+                for(Double x : xData){
                     if(x!=0){
                         tmp = Math.log(x)/Math.log(2);
                     }else{
@@ -277,7 +448,8 @@ public class ResultsChartPanel extends JPanel {
                 break;
         }
         if(chart.getAllSeriesMap().get("Standard"+Num) != null){
-            chart.getAllSeriesMap().get("Standard"+Num).replaceYData(yData);
+            chart.getSeriesMap().remove("Standard"+Num);
+            chart.addSeries("Standard"+Num, xData, yData);
         }else{
             chart.addSeries("Standard"+Num, xData, yData);
         }
@@ -297,6 +469,8 @@ public class ResultsChartPanel extends JPanel {
 
         jPanelTableButtons = new javax.swing.JPanel();
         jButtonSaveChartAsImage = new javax.swing.JButton();
+        jButtonSetCheckpoints = new javax.swing.JButton();
+        jButtonRemoveCheckpoints = new javax.swing.JButton();
         jPanelChartHolder = new javax.swing.JPanel();
         jPanelSetting = new javax.swing.JPanel();
         jRadioShowall = new javax.swing.JRadioButton();
@@ -330,6 +504,20 @@ public class ResultsChartPanel extends JPanel {
             }
         });
 
+        jButtonSetCheckpoints.setText("Set Checkpoints");
+        jButtonSetCheckpoints.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSetCheckpointsActionPerformed(evt);
+            }
+        });
+
+        jButtonRemoveCheckpoints.setText("RemoveCheckpoints");
+        jButtonRemoveCheckpoints.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoveChrckpointsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelTableButtonsLayout = new javax.swing.GroupLayout(jPanelTableButtons);
         jPanelTableButtons.setLayout(jPanelTableButtonsLayout);
         jPanelTableButtonsLayout.setHorizontalGroup(
@@ -337,12 +525,19 @@ public class ResultsChartPanel extends JPanel {
             .addGroup(jPanelTableButtonsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButtonSaveChartAsImage)
+                .addGap(38, 38, 38)
+                .addComponent(jButtonSetCheckpoints)
+                .addGap(42, 42, 42)
+                .addComponent(jButtonRemoveCheckpoints)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelTableButtonsLayout.setVerticalGroup(
             jPanelTableButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTableButtonsLayout.createSequentialGroup()
-                .addComponent(jButtonSaveChartAsImage)
+                .addGroup(jPanelTableButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonSaveChartAsImage)
+                    .addComponent(jButtonSetCheckpoints)
+                    .addComponent(jButtonRemoveCheckpoints))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -394,6 +589,11 @@ public class ResultsChartPanel extends JPanel {
         });
 
         jTextFieldParam.setText("1");
+        jTextFieldParam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldParamActionPerformed(evt);
+            }
+        });
 
         jPanelInfo.setFont(new java.awt.Font("Yu Gothic UI", 0, 14)); // NOI18N
         jPanelInfo.setMinimumSize(new java.awt.Dimension(400, 35));
@@ -545,7 +745,7 @@ public class ResultsChartPanel extends JPanel {
     public void saveChart()
     {
         try {
-            String chartID = chart.getStyleManager().getChartType().toString()+"Chart" + this.taskID + ".jpg";
+            String chartID = "Chart" + this.taskID + ".jpg";
             File saveFile = new File(chartID);
             // create file filters
             List<String[]> filters = new ArrayList<>();
@@ -613,9 +813,7 @@ public class ResultsChartPanel extends JPanel {
                 }
             }
 
-//            BitmapEncoder.saveBitmapWithDPI(chart, "./Sample_Chart_300_DPI", BitmapFormat.PNG, 300);
-//            BitmapEncoder.saveBitmapWithDPI(chart, "./Sample_Chart_300_DPI", BitmapFormat.JPG, 300);
-//            BitmapEncoder.saveBitmapWithDPI(chart, "./Sample_Chart_300_DPI", BitmapFormat.GIF, 300);
+
         }
         catch (IOException ex) {
             Logger.getLogger(ResultsChartPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -634,7 +832,7 @@ public class ResultsChartPanel extends JPanel {
 
     private void jRadioShowallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioShowallActionPerformed
         setSeriesListEnable(false);
-        chart.showAll();
+        chart.showAllSeries();
         jPanelChartHolder.revalidate();
         jPanelChartHolder.repaint();
     }//GEN-LAST:event_jRadioShowallActionPerformed
@@ -651,19 +849,19 @@ public class ResultsChartPanel extends JPanel {
         boolean b = jListSeries.isEnabled();
         if (index != -1 && b) {
            JCheckBox c = (JCheckBox)seriesListModel.getElementAt(index);
-           
+
            if(chart.getCurrentSeriesNum()==1 && c.isSelected()==true){
                JOptionPane.showMessageDialog(this, "You have to choose at least one line.",
                 "Notice", JOptionPane.INFORMATION_MESSAGE);
                c.setSelected(true);
                return;
            }
-           
+
            c.setSelected(!c.isSelected());
            jListSeries.repaint();
            if(c.isSelected()) chart.showSeries(c.getText());
            else chart.hideSeries(c.getText());
-           
+
            jPanelChartHolder.revalidate();
            jPanelChartHolder.repaint();
         }
@@ -687,13 +885,13 @@ public class ResultsChartPanel extends JPanel {
             this.jLabel4.setVisible(true);
             this.jTextFieldParam1.setVisible(true);
             updateBoundary(2);
-            
+
         }else{
             this.jLabel3.setVisible(false);
             this.jComboBoxBoundary1.setVisible(false);
             this.jLabel4.setVisible(false);
             this.jTextFieldParam1.setVisible(false);
-            
+
             chart.hideSeries("Standard2");
             jPanelChartHolder.revalidate();
             jPanelChartHolder.repaint();
@@ -703,40 +901,37 @@ public class ResultsChartPanel extends JPanel {
     private void jComboBoxBoundary1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxBoundary1ActionPerformed
         updateBoundary(2);
     }//GEN-LAST:event_jComboBoxBoundary1ActionPerformed
-    public void openEditor(){
-        
-//        String[] editors = {  "atom","vim", "emacs", "vi"};
-//        String editor = null;
-//        for (String editor1 : editors) {
-//            try {
-//                if (Runtime.getRuntime().exec(new String[]{"which", editor1}).waitFor() == 0) {
-//                    editor = editor1;
-//                }
-//            }catch (Exception ioe){
-//                // ignore ... any significant errors should already have been
-//                // reported via an IOException from the final flush.
-//            }
-//        }
-//        if (editor == null) {
-//                System.out.println("Could not find editorrrrrrrrrrrrr");}
-//        
-//        try{
-//            System.out.println("TRY EXECUTING TEST!!!");
-//            File baseDir = new File(".");
-//            System.out.println("Base directory: " + baseDir);
-//            // setup input & output files
-//            File xsltFile = new File(baseDir, "xml/xslt/task.xsl");
-//            Process ed = Runtime.getRuntime().exec(new String[] {"libreoffice", "/home/nblagoeva/AlgoBench_App/saved/heapsort_714.odt"});
-//        }
-//        catch(IOException e){
-//            System.out.println("Failed to execute!");
-//        }
-    
-    }
+
+    private void jButtonSetCheckpointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSetCheckpointsActionPerformed
+        // TODO add your handling code here:
+
+        Checkpoints newChps = new Checkpoints(new JFrame(), true, this.task); //Pass task.checkpoints to constructor
+        newChps.showDialog();
+        if (newChps.hasResults()) { //extract chart(Plotter.java) in Checkpoints
+            String s = task.getCheckpoints();
+            Plotter p = new Plotter(this.task.getTaskID(), s, 0);
+            LineChart chpChart = p.getLineChart();
+            addCheckpointsToResultsChart(chpChart);
+
+        }
+    }//GEN-LAST:event_jButtonSetCheckpointsActionPerformed
+
+    private void jTextFieldParamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldParamActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldParamActionPerformed
+
+    private void jButtonRemoveChrckpointsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveChrckpointsActionPerformed
+        // TODO add your handling code here:
+        removeCheckpoints();
+        jButtonRemoveCheckpoints.setEnabled(false);
+    }//GEN-LAST:event_jButtonRemoveChrckpointsActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonRemoveCheckpoints;
     private javax.swing.JButton jButtonSaveChartAsImage;
+    private javax.swing.JButton jButtonSetCheckpoints;
     private javax.swing.JCheckBox jCheckBoxAdd;
     private javax.swing.JComboBox<String> jComboBoxBoundary;
     private javax.swing.JComboBox<String> jComboBoxBoundary1;

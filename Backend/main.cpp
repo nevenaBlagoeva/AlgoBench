@@ -91,6 +91,8 @@ namespace inf2b
         MicroSec duration_micro;
         long duration_nano;
         std::string output;
+        //std::string ch_output;
+        std::string checkpoints;
         output.reserve( 100 );
         if ( Command[ "ALGORITHM-GROUP" ] == HASH ) {
             PairList pairList;
@@ -101,7 +103,7 @@ namespace inf2b
 
             std::cout << "[TASKRUNNER] Transferring results to SERVER..." << std::endl;
             std::cout << "[STATUS]\tTransferring results to SERVER..." << std::endl;
-
+            std::cout << "OUTPUT-> " << output << std::endl;
             reportProgress( output );
             return;
         }
@@ -167,8 +169,8 @@ namespace inf2b
                             inputVectorArray[ pos ].push_back( ( size_t ) std::stoul( number ) );
                         }
                     }
-                    Command[ "NUMREPEATS" ] = 1;
-                    Command[ "NUMRUNS" ] = inputVectorArray.size();
+                    //Command[ "NUMREPEATS" ] = 1;
+                    //Command[ "NUMRUNS" ] = inputVectorArray.size();
                     std::cout << "[NUMRUNS]\t" << Command[ "NUMRUNS" ] << std::endl;
                     currentInputSize = Command[ "NUMRUNS" ] > 0 ? inputVectorArray[ 0 ].size() : 0;
                 }
@@ -244,17 +246,24 @@ namespace inf2b
 
         for ( int j = 0; j < Command[ "NUMREPEATS" ]; ++j ) {
             output += "\tRun " + std::to_string( j + 1 );
+            if (Command[ "ALGORITHM" ] == INTERNAL_MERGE_SORT){
+              output += "\tRun " + std::to_string(j+1) + "-Checkpoint1";
+            }
         }
         output += "\n";
         reportProgress( output );
+        //ch_output += "\n";
+        //reportProgress( ch_output );
 
         // executing algorithms
         for ( int i = 0; i < Command[ "NUMRUNS" ]; ++i ) {
 
             currentInputSize = Command[ "INPUT-STARTSIZE" ] + ( i * Command[ "INPUT-STEPSIZE" ] );
+            std::cout << "[INPUT_SIZE]\t" << currentInputSize << std::endl;
 
             long elapsedTime = 0L;
             output = std::to_string( currentInputSize );
+            //checkpoints = std::to_string( currentInputSize);
             float repetition=1.0;
 
             // repeat with same input for the specified times
@@ -333,6 +342,8 @@ namespace inf2b
                         else if ( Command[ "ALGORITHM" ] == INTERNAL_MERGE_SORT ) {
                             duration = inf2b::AlgoTimer< MilliSec >
                                 ::timedExecution< InternalMergeSort >( input );
+                            checkpoints = inf2b::InternalMergeSort::getCheckpoints();
+                            //std::cout << "[CHECKPOINT1]\t" << checkpoints << "\t"+std::to_string(j) << std::endl;
                         }
                         break;
                     }
@@ -422,16 +433,24 @@ namespace inf2b
                 } else if( Command[ "ALGORITHM-GROUP" ] == SEARCH){
                   std::cout << "[UPDATE]\tRun " << (j + 1) << " summary:  Size=" << currentInputSize << "  Time=" << (duration_micro.count()) << "μs" << std::endl << std::endl;
                   output.append( "\t" + std::to_string( duration_micro.count()) );
+                  //ch_output.append("\t" + checkpoints);
                 } else {
 
+
                     std::cout << "[UPDATE]\tRun " << (j + 1) << " summary:  Size=" << currentInputSize << "  Time=" << duration.count() << "ms" << std::endl << std::endl;
-                    output.append( "\t" + std::to_string( duration.count() ) );
+                    output.append( "\t" + std::to_string( duration.count() )+ "\t"+ checkpoints);
+                    //ch_output.append("\t" + checkpoints);
+
+
                 }
+              //std::cout << "[END]\t" + std::to_string(j) + "\t" + std::to_string(currentInputSize) + "\t" + checkpoints << std::endl;
             }
 
             std::cout << "[NUMCOMPLETEDRUNS]\t" << i + 1 << std::endl;
-            reportProgress( output + "\n" );
+            reportProgress( output  + "\n");
+
         }
+        //reportProgress(ch_output+"\n");
     }
 
     void signalHandler( int signal )

@@ -6,14 +6,14 @@ include(UseJava)
 
 # Get properties' files
 set(config_PATH "inf2b/algobench/config")
-set(AlgoBench_CONFIG ${config_PATH}/config.properties 
+set(AlgoBench_CONFIG ${config_PATH}/config.properties
 				 ${config_PATH}/default.properties
 				 ${config_PATH}/settings.xml
 		)
 
 # HTML/CSS files
 set(html_PATH "inf2b/algobench/html")
-file(GLOB inHtmlFiles RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" 
+file(GLOB inHtmlFiles RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
                  "${html_PATH}/*.html"
                  "${html_PATH}/*.css"
                  "${html_PATH}/*.gif"
@@ -33,10 +33,10 @@ set(main_PATH "inf2b/algobench/main/")
 set(AlgoBench_MAIN ${main_PATH}/AlgoBench.java)
 
 set(model_PATH "inf2b/algobench/model")
-set(AlgoBench_MODEL 
+set(AlgoBench_MODEL
                  ${model_PATH}/ClientPipe.java
-				 ${model_PATH}/MyChart.java 
-				 ${model_PATH}/MyChartBuilder.java
+				 ${model_PATH}/LineChart.java
+				 ${model_PATH}/LineChartBuilder.java
 				 ${model_PATH}/Plotter.java
 				 ${model_PATH}/Task.java
 				 ${model_PATH}/TaskMaster.java
@@ -73,7 +73,7 @@ set(AlgoBench_UI ${ui_PATH}/CompareChartPanel.form
 		)
 
 set(util_PATH "inf2b/algobench/util")
-set(AlgoBench_UTIL 
+set(AlgoBench_UTIL
                  ${util_PATH}/CheckBoxListRenderer.java
 				 ${util_PATH}/CheckboxTableRenderer.java
  				 ${util_PATH}/CompareDetailTableRenderer.java
@@ -91,6 +91,18 @@ set(AlgoBench_UTIL
 #find xchart Jar lib
 find_jar(xchart_JAR
 			"xchart-2.5.0"
+			PATHS "${CMAKE_CURRENT_SOURCE_DIR}/../lib/"
+		)
+
+#find knowm Jar lib
+find_jar(knowm_JAR
+			"xchart-3.5.0"
+			PATHS "${CMAKE_CURRENT_SOURCE_DIR}/../lib/"
+		)
+
+#find knowm-demo Jar lib
+find_jar(knowm_demo_JAR
+			"xchart-demo-3.5.0"
 			PATHS "${CMAKE_CURRENT_SOURCE_DIR}/../lib/"
 		)
 
@@ -176,24 +188,28 @@ find_jar(netBeansModule_JAR
 			PATHS "${CMAKE_CURRENT_SOURCE_DIR}/../lib/CopyLibs/"
 		)
 
-#check if found 
+#check if found
 message(${xchart_JAR})
+message(${knowm_JAR})
+message(${knowm_demo_JAR})
 message(${absoluteLayout_JAR})
 message(${beansBinding_JAR})
 message(${netBeansModule_JAR})
 message(${xml_graphics_JAR})
 
 # Create AlgoBench_GUI jar file
-add_jar(AlgoBench_GUI 
+add_jar(AlgoBench_GUI
 			${AlgoBench_MAIN}
-			${AlgoBench_UTIL} 
-			${AlgoBench_MODEL} 
-			${AlgoBench_UI} 
+			${AlgoBench_UTIL}
+			${AlgoBench_MODEL}
+			${AlgoBench_UI}
 			${AlgoBench_CONFIG}
 			${inHtmlFiles}
 			${inVisualFiles}
         INCLUDE_JARS
 			${xchart_JAR}
+			${knowm_JAR}
+			${knowm_demo_JAR}
 			${absoluteLayout_JAR}
 			${beansBinding_JAR}
 			${netBeansModule_JAR}
@@ -214,7 +230,7 @@ add_jar(AlgoBench_GUI
         MANIFEST
             MANIFEST.MF
         )
-        
+
 # get props of the generated .jar file (i.e., AlgoBench_GUI.jar)
 get_target_property(_jarFilePath AlgoBench_GUI JAR_FILE)
 get_target_property(_classDirPath AlgoBench_GUI CLASSDIR)

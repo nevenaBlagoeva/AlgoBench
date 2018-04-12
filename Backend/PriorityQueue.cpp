@@ -129,7 +129,6 @@ long PriorityQueue::operator()(){
     /* timing insertion and basic operations */
     std::chrono::time_point< std::chrono::high_resolution_clock > start_time, end_time;
     long m_output=0;
-    //long m_output;
     m_last_index = m_input.size() - 2;
 
     buildHeap();
@@ -142,10 +141,6 @@ long PriorityQueue::operator()(){
         removeMax();
         end_time = std::chrono::high_resolution_clock::now();
         m_output+=std::chrono::duration_cast<std::chrono::nanoseconds>(end_time-start_time).count();
-        //m_output+=m_out;
-        //std::cout << m_output.count() << '\n';
-        //std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(start_time-end_time).count() << '\n';
-        //std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end_time-start_time).count() << '\n';
       }
 
     } if (m_insertOP){

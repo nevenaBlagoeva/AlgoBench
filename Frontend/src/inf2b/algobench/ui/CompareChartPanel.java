@@ -6,19 +6,20 @@
 
 package inf2b.algobench.ui;
 
-import com.xeiam.xchart.BitmapEncoder;
-import com.xeiam.xchart.BitmapEncoder.BitmapFormat;
-import com.xeiam.xchart.Series;
-import com.xeiam.xchart.XChartPanel;
+import org.knowm.xchart.XChartPanel;
+import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.BitmapEncoder;
+import org.knowm.xchart.BitmapEncoder.BitmapFormat;
+
+
 import inf2b.algobench.main.AlgoBench;
-import inf2b.algobench.model.MyChart;
+import inf2b.algobench.model.LineChart;
 import inf2b.algobench.util.CheckBoxListRenderer;
 import inf2b.algobench.util.CompareDetailTableRenderer;
 import java.awt.CardLayout;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,7 +38,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class CompareChartPanel extends JPanel {
 
-    MyChart chart;
+    LineChart chart;
     String compareID;
     private DefaultListModel<JCheckBox> seriesListModel;
     private DefaultTableModel tableModel;
@@ -53,14 +54,15 @@ public class CompareChartPanel extends JPanel {
         this.jTableDetails.setDefaultRenderer(Object.class, new CompareDetailTableRenderer());
     }
 
-    public void addCompareChart(MyChart chart){
+    
+    public void addCompareChart(LineChart chart){
         this.chart = chart;
         jPanelChartHolder.add(new XChartPanel(chart),"cardChart");
         cardlayout.show(jPanelChartHolder, "cardChart");
         
-        Iterator<Map.Entry<String, Series>> entries = chart.getSeriesMap().entrySet().iterator();
+        Iterator<Map.Entry<String, XYSeries>> entries = chart.getSeriesMap().entrySet().iterator();
         while(entries.hasNext()){
-            Map.Entry<String, Series> entry = entries.next();
+            Map.Entry<String, XYSeries> entry = entries.next();
             String s = entry.getKey();
             seriesListModel.addElement(new JCheckBox(s));
         }
@@ -77,11 +79,10 @@ public class CompareChartPanel extends JPanel {
     public void addCompareTable(DefaultTableModel model){
         this.tableModel = model;
         for(int i=0; i<model.getRowCount(); i++){
-            Map<String, Series> seriesMap = new LinkedHashMap<>();
+            Map<String, XYSeries> seriesMap = new LinkedHashMap<>();
             seriesMap = chart.getSeriesMap();
             String seriesName = model.getValueAt(i, 1) + "";
-            Series s = seriesMap.get(seriesName);
-            model.setValueAt(s.getStrokeColor(), i, 0);
+            XYSeries s = seriesMap.get(seriesName);
         }
         jTableDetails.setModel(this.tableModel);
         jTableDetails.getColumnModel().getColumn(0).setMinWidth(0);
@@ -303,9 +304,7 @@ public class CompareChartPanel extends JPanel {
                 }
             }
 
-//            BitmapEncoder.saveBitmapWithDPI(chart, "./Sample_Chart_300_DPI", BitmapFormat.PNG, 300);
-//            BitmapEncoder.saveBitmapWithDPI(chart, "./Sample_Chart_300_DPI", BitmapFormat.JPG, 300);
-//            BitmapEncoder.saveBitmapWithDPI(chart, "./Sample_Chart_300_DPI", BitmapFormat.GIF, 300);
+
         }
         catch (IOException ex) {
             Logger.getLogger(CompareChartPanel.class.getName()).log(Level.SEVERE, null, ex);

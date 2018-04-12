@@ -1361,7 +1361,7 @@ public class MainWindow extends JFrame implements ITaskCompleteListener {
                 fileName_odt.deleteOnExit();
               
             } else {
-                // Delete previous version if any
+                 // Delete previous version if any
                 if(fileName_odt.exists()){
                     fileName_odt.delete();
                 }

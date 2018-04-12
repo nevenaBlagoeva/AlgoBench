@@ -28,6 +28,7 @@
 package inf2b.algobench.ui.components;
 
 import inf2b.algobench.util.ITreeSubPanel;
+import javax.swing.JLabel;
 
 public class TreeTaskSubPanel extends javax.swing.JPanel implements ITreeSubPanel {
 
@@ -125,7 +126,7 @@ public class TreeTaskSubPanel extends javax.swing.JPanel implements ITreeSubPane
     {
         jLabelMemUsageOp.setText(memory);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

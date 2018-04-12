@@ -23,30 +23,30 @@
  */
 
 /*
- * Modified by Yufen Wang.
- * 2016
+ * Modified by Yufen Wang and Nevena Blagoeva.
+ * 2016, 2018
  */
 
 package inf2b.algobench.model;
 
-import com.xeiam.xchart.StyleManager;
-import com.xeiam.xchart.XChartPanel;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-
+import org.knowm.xchart.CategoryChart;
+import org.knowm.xchart.CategoryChartBuilder;
+import org.knowm.xchart.style.Styler;
 /**
  * Parses the returned execution data and gets a chart object for display by the
  * ResultsChartPanel. Extends JPanel only to be capable of displaying the chart
  * by itself if required.
  *
  * @author eziama ubachukwu and Yufen Wang
+ * 
  */
 public class Plotter extends JPanel implements Serializable {
 
-    private MyChart chart;
+    private LineChart chart;
     private double xData[];
     private double ySeries[][]; // for multi-series charts
     private double averageSeries[];
@@ -59,7 +59,7 @@ public class Plotter extends JPanel implements Serializable {
     private double standardDeviation;
     String[] seriesTitles;
     private boolean runAverage;
-
+    
     /**
      * Handles obtaining the charts of the runtimes, which the caller should
      * wrap in an XChartPanel and then display.
@@ -110,7 +110,7 @@ public class Plotter extends JPanel implements Serializable {
         
         seriesTitles = lines[0].split("\t"); // label line
         //set average line if repeats more than once and not for hash algorithm
-        if(numValidColumns != 2 && seriesTitles.length > 2){
+        if(numValidColumns != 2 && seriesTitles.length > 2 && !lines[0].contains("Checkpoint")){
             this.runAverage = true;
         }
 
@@ -146,9 +146,9 @@ public class Plotter extends JPanel implements Serializable {
         }
     }
     
-    public MyChart getLineChart() {
+    public LineChart getLineChart() {
         // create chart
-        chart = new MyChartBuilder().chartType(StyleManager.ChartType.Line).theme(StyleManager.ChartTheme.Matlab)
+        chart = new LineChartBuilder().theme(Styler.ChartTheme.Matlab)
                 .width(800).height(600).title(title).xAxisTitle(xAxisLabel).yAxisTitle(yAxisLabel).build();
         // populate the series with the processed data
         if(this.runAverage)chart.addSeries("Average", xData, averageSeries);
@@ -158,8 +158,8 @@ public class Plotter extends JPanel implements Serializable {
             }
         }
         // Customize Chart
-        chart.getStyleManager().setLegendPosition(StyleManager.LegendPosition.InsideNW);
-        chart.getStyleManager().setAxisTitlesVisible(true);   
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
+        chart.getStyler().setAxisTitlesVisible(true);   
 
         return chart;
     }
@@ -167,19 +167,25 @@ public class Plotter extends JPanel implements Serializable {
     public boolean hasAverage(){
         return this.runAverage;
     }
-
-    public MyChart getBarChart() {
+    
+    
+    public CategoryChart getBarChart() {
         // create chart
-        chart = new MyChartBuilder().chartType(StyleManager.ChartType.Bar).theme(StyleManager.ChartTheme.Matlab)
-                .width(800).height(600).title(title).xAxisTitle(xAxisLabel).yAxisTitle(yAxisLabel).build();
+        CategoryChart chart = new CategoryChartBuilder().width(800).
+                                                        height(600).
+                                                        title(title).
+                                                        xAxisTitle(xAxisLabel).
+                                                        yAxisTitle(yAxisLabel).
+                                                        build();
+
         for (int i = 0; i < ySeries.length; ++i) {
             if (xData.length > 0 && ySeries[i].length == xData.length) {
                 chart.addSeries(seriesTitles[i + 1], xData, ySeries[i]);
             }
         }
         // Customize Chart
-        chart.getStyleManager().setLegendPosition(StyleManager.LegendPosition.InsideNW);
-        chart.getStyleManager().setAxisTitlesVisible(true);
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
+        chart.getStyler().setHasAnnotations(true);
 
         return chart;
     }
@@ -216,16 +222,6 @@ public class Plotter extends JPanel implements Serializable {
         this.standardDeviation = Math.sqrt(deviation);
         return standardDeviation;
     }
-
-    public static void main(String args[]) {
-        String response = "Size\tRun1\tRun2\n100\t150\t155\n200\t320\t350\n300\t500\t550";
-        JPanel chartPanel = new XChartPanel(
-                new Plotter("Test", response, 0).getLineChart());
-        JFrame frame = new JFrame();
-        frame.setSize(500, 400);
-        frame.add(chartPanel);
-        frame.pack();
-        frame.setVisible(true);
-    }
-
+    
 }
+

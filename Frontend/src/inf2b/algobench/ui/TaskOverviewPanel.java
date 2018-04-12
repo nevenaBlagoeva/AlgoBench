@@ -47,6 +47,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -67,6 +68,7 @@ public class TaskOverviewPanel extends JPanel implements Serializable {
     protected QueueTaskSubPanel queueSubPanel;
     protected ITaskSubPanel taskSubPanel;
     protected ITreeSubPanel treeInterface;
+    public static String[] checkpoints = new String[5];
 
     /**
      * Creates new form TaskPanel
@@ -78,6 +80,8 @@ public class TaskOverviewPanel extends JPanel implements Serializable {
 
         SmartScroller smartScroller = new SmartScroller(this.jScrollPaneOutput);
         smartScroller.initListener();
+        
+        
 
         this.task = task;
         this.jLabelAlgorithm.setText(" (" + this.task.getAlgorithm() + ")");
@@ -340,15 +344,19 @@ public class TaskOverviewPanel extends JPanel implements Serializable {
                 taskSubPanel.setNumTasks(parts[1]);
                 break;
             case "[MINBUCKETSIZE]":
+                task.setMinBucketSize(parts[1]);
                 ((HashTaskSubPanel) taskSubPanel).setMinBucketSize(parts[1]);
                 break;
             case "[MAXBUCKETSIZE]":
+                task.setMaxBucketSize(parts[1]);
                 ((HashTaskSubPanel) taskSubPanel).setMaxBucketSize(parts[1]);
                 break;
             case "[AVERAGE]":
+                task.setAverageBucketSize(parts[1]);
                 ((HashTaskSubPanel) taskSubPanel).setAverageBucketSize(parts[1]);
                 break;
             case "[STDDEVIATION]":
+                task.setSTDHash(parts[1]);
                 ((HashTaskSubPanel) taskSubPanel).setBucketSizeSD(parts[1]);
                 break;
             case "[ERROR]":
@@ -356,11 +364,21 @@ public class TaskOverviewPanel extends JPanel implements Serializable {
                 break;
             case "[UPDATE]":
                 this.jTextAreaStreamingOutput.append(parts[1] + "\n");
-                break;
+                break;   
             default:
                 this.jTextAreaStreamingOutput.append(newUpdate + "\n");
                 break;
         }
+    }
+    
+    private void addCheckpoint(String data,int position){
+       
+        checkpoints[position]+= data.substring(8) + "\n";
+ 
+    }
+    
+    public static String[] getCheckpoints(){
+        return checkpoints;
     }
 
     /**

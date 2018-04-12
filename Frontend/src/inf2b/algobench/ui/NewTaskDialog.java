@@ -307,11 +307,6 @@ public class NewTaskDialog extends JDialog {
                 displayError("");
                 jLabelHashWarn.setText("");
                 if((!jTextFieldHasha.getText().equals(""))&&validateNumberType2(jTextFieldHasha.getText())){
-//                    if(validateHashParams()){
-//                        jButtonCreateTask.setEnabled(true);
-//                    }else{
-//                        jButtonCreateTask.setEnabled(false);
-//                    }
                     if((!jTextFieldHashn.getText().equals(""))&&validateNumberType(jTextFieldHashn.getText())){
                         int a = Integer.parseInt(jTextFieldHasha.getText());
                         int n = Integer.parseInt(jTextFieldHashn.getText());
@@ -326,11 +321,7 @@ public class NewTaskDialog extends JDialog {
                 displayError("");
                 jLabelHashWarn.setText("");
                 if((!jTextFieldHasha.getText().equals(""))&&validateNumberType2(jTextFieldHasha.getText())){
-//                    if(validateHashParams()){
-//                        jButtonCreateTask.setEnabled(true);
-//                    }else{
-//                        jButtonCreateTask.setEnabled(false);
-//                    }
+
                     if((!jTextFieldHashn.getText().equals(""))&&validateNumberType(jTextFieldHashn.getText())){
                         int a = Integer.parseInt(jTextFieldHasha.getText());
                         int n = Integer.parseInt(jTextFieldHashn.getText());
@@ -349,11 +340,7 @@ public class NewTaskDialog extends JDialog {
                 displayError("");
                 jLabelHashWarn.setText("");
                 if((!jTextFieldHashb.getText().equals(""))&&validateNumberType2(jTextFieldHashb.getText())){
-//                    if(validateHashParams()){
-//                        jButtonCreateTask.setEnabled(true);
-//                    }else{
-//                        jButtonCreateTask.setEnabled(false);
-//                    }
+
                 }
             }
 
@@ -362,11 +349,7 @@ public class NewTaskDialog extends JDialog {
                 displayError("");
                 jLabelHashWarn.setText("");
                 if((!jTextFieldHashb.getText().equals(""))&&validateNumberType2(jTextFieldHashb.getText())){
-//                    if(validateHashParams()){
-//                        jButtonCreateTask.setEnabled(true);
-//                    }else{
-//                        jButtonCreateTask.setEnabled(false);
-//                    }
+
                 }
             }
 
@@ -3394,8 +3377,7 @@ public class NewTaskDialog extends JDialog {
         jRadioButtonAlgoGenElement.setSelected(false);
         jRadioButtonCustomElement.setSelected(false);
         jRadioButtonWorstCaseElement.setSelected(false);
-        jTextFieldCustomDataElement.setEnabled(false);
-                                    
+        jTextFieldCustomDataElement.setEnabled(false);                            
         
     }//GEN-LAST:event_jCheckBoxFindMaxElemActionPerformed
 
@@ -3435,20 +3417,7 @@ public class NewTaskDialog extends JDialog {
             resetSummary();
             jCheckBoxInsertQueueElemActionPerformed(evt);
         }
-                
-//        
-//        jCheckBoxInsertQueueElemActionPerformed(evt);
-//        
-//        if(jRadioButtonCustomElement.isSelected()){
-//            
-//            jTextFieldCustomDataElement.setEnabled(true);
-//            jCheckBoxInsertQueueElemActionPerformed(evt);
-//
-//            if (jTextFieldCustomDataElement.getText().equals(""))
-//                jButtonCreateTask.setEnabled(false);
-//            resetSummary();
-//        }
-//        
+
         
         
         
@@ -3698,10 +3667,7 @@ public class NewTaskDialog extends JDialog {
                 displayError("N cannot be ZERO.");
                 return false;
             }
-//            if(n>inputsize){
-//                displayError("N cannot be larger than Input size.");
-//                return false;
-//            }
+
         }
         return true;
     }

@@ -139,6 +139,39 @@
                                                                     <fo:table-cell padding-start="20.0pt"><fo:block><xsl:value-of select="search-time"/></fo:block></fo:table-cell>
                                                                 </fo:table-row>
                                                                 </xsl:if>
+                                                                
+                                                                <!-- Max. bucket size -->
+                                                                <xsl:if test="hash-max-bucket-size">
+                                                                <fo:table-row>
+                                                                    <fo:table-cell padding-start="20.0pt"><fo:block>Max. bucket size:</fo:block></fo:table-cell>
+                                                                    <fo:table-cell padding-start="20.0pt"><fo:block><xsl:value-of select="hash-max-bucket-size"/></fo:block></fo:table-cell>
+                                                                </fo:table-row>
+                                                                </xsl:if>
+                                                                
+                                                                <!-- Min. bucket size -->
+                                                                <xsl:if test="hash-min-bucket-size">
+                                                                <fo:table-row>
+                                                                    <fo:table-cell padding-start="20.0pt"><fo:block>Min. bucket size:</fo:block></fo:table-cell>
+                                                                    <fo:table-cell padding-start="20.0pt"><fo:block><xsl:value-of select="hash-min-bucket-size"/></fo:block></fo:table-cell>
+                                                                </fo:table-row>
+                                                                </xsl:if>
+                                                                  
+                                                                <!-- Average bucket size -->
+                                                                <xsl:if test="hash-avg-bucket-size">
+                                                                <fo:table-row>
+                                                                    <fo:table-cell padding-start="20.0pt"><fo:block>Average bucket size:</fo:block></fo:table-cell>
+                                                                    <fo:table-cell padding-start="20.0pt"><fo:block><xsl:value-of select="hash-avg-bucket-size"/></fo:block></fo:table-cell>
+                                                                </fo:table-row>
+                                                                </xsl:if>
+
+                                                                <!-- Standard deviation -->
+                                                                <xsl:if test="hash-std">
+                                                                <fo:table-row>
+                                                                    <fo:table-cell padding-start="20.0pt"><fo:block>Standard deviation:</fo:block></fo:table-cell>
+                                                                    <fo:table-cell padding-start="20.0pt"><fo:block><xsl:value-of select="hash-std"/></fo:block></fo:table-cell>
+                                                                </fo:table-row>
+                                                                </xsl:if>                                                                
+                                                                
                                                                  
                                     <!-- Graph Is Directed -->
                                     <xsl:if test="graph-is-directed">
@@ -298,7 +331,31 @@
         				<fo:table-cell padding-start="20.0pt"><fo:block><xsl:value-of select="tree-hight"/></fo:block></fo:table-cell>
                                     </fo:table-row>
                                     </xsl:if>
-                                   
+                                    
+                                    <!-- Bucket array size-->
+                                    <xsl:if test="hash-bucket-array-size">
+                                    <fo:table-row>
+                                        <fo:table-cell padding-start="20.0pt"><fo:block>Bucket array size:</fo:block></fo:table-cell>
+                                        <fo:table-cell padding-start="20.0pt"><fo:block><xsl:value-of select="hash-bucket-array-size"/></fo:block></fo:table-cell>
+                                    </fo:table-row>
+                                    </xsl:if>
+                                                                        
+                                    <!-- Hash function-->
+                                    <xsl:if test="hash-function">
+                                    <fo:table-row>
+                                        <fo:table-cell padding-start="20.0pt"><fo:block>Hash function:</fo:block></fo:table-cell>
+                                        <fo:table-cell padding-start="20.0pt"><fo:block><xsl:value-of select="hash-function"/></fo:block></fo:table-cell>
+                                    </fo:table-row>
+                                    </xsl:if>
+                                    
+                                    <!-- Hash key type-->
+                                    <xsl:if test="hash-key-type">
+                                    <fo:table-row>
+                                        <fo:table-cell padding-start="20.0pt"><fo:block>Hash key type:</fo:block></fo:table-cell>
+                                        <fo:table-cell padding-start="20.0pt"><fo:block><xsl:value-of select="hash-key-type"/></fo:block></fo:table-cell>
+                                    </fo:table-row>
+                                    </xsl:if>
+                                    
                                     <!-- empty line -->
         							<fo:table-row><fo:table-cell><fo:block><fo:leader /></fo:block></fo:table-cell></fo:table-row>
 

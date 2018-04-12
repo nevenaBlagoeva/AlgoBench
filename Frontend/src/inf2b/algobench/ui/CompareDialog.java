@@ -5,11 +5,14 @@
 
 package inf2b.algobench.ui;
 
-import com.xeiam.xchart.Series;
-import com.xeiam.xchart.StyleManager;
+import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.style.Styler;
+
+//import com.xeiam.xchart.Series;
+//import com.xeiam.xchart.StyleManager;
 import inf2b.algobench.main.AlgoBench;
-import inf2b.algobench.model.MyChart;
-import inf2b.algobench.model.MyChartBuilder;
+import inf2b.algobench.model.LineChart;
+import inf2b.algobench.model.LineChartBuilder;
 import inf2b.algobench.model.Task;
 import inf2b.algobench.model.TaskMaster;
 import inf2b.algobench.util.CheckboxTableRenderer;
@@ -37,7 +40,7 @@ public class CompareDialog extends JDialog {
     private boolean[] selectability;
     private int selectNum;
     private CompareChartPanel comparetChartPanel;
-    private MyChart chart;
+    private LineChart chart;
     boolean userCancelled;
     //detail table datas
     private Vector<Object> onerow;
@@ -590,24 +593,30 @@ public class CompareDialog extends JDialog {
                 displayError("Can not find algo group");
                 return;
         }
-        chart = new MyChartBuilder().chartType(StyleManager.ChartType.Line).theme(StyleManager.ChartTheme.Matlab)
+        
+        chart = new LineChartBuilder().theme(Styler.ChartTheme.Matlab)
                 .title(title).xAxisTitle(XAxisTitle).yAxisTitle(YAxisTitle).width(800).height(600).build();
-        chart.getStyleManager().setLegendPosition(StyleManager.LegendPosition.InsideNW);
-        chart.getStyleManager().setAxisTitlesVisible(true);
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
+        chart.getStyler().setAxisTitlesVisible(true);
+        
+//        chart = new LineChartBuilder().chartType(StyleManager.ChartType.Line).theme(StyleManager.ChartTheme.Matlab)
+//                .title(title).xAxisTitle(XAxisTitle).yAxisTitle(YAxisTitle).width(800).height(600).build();
+//        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
+//        chart.getStyler().setAxisTitlesVisible(true);
 
         //add series to compareChart
-        Map<String, Series> serieses = new LinkedHashMap<>();
+        Map<String, XYSeries> serieses = new LinkedHashMap<>();
         for(TaskMaster tma : taskmasters){
             ResultsChartPanel rcpanel = (ResultsChartPanel)tma.getResultChartPanel();
-            Series tmps = rcpanel.getAverageSeries();
+            XYSeries tmps = rcpanel.getAverageSeries();
             Task t = tma.getTask();
             String seriesName = tma.getTaskID();
 
             serieses.put(seriesName, tmps);
         }
-        Iterator<Map.Entry<String, Series>> entries = serieses.entrySet().iterator();
+        Iterator<Map.Entry<String, XYSeries>> entries = serieses.entrySet().iterator();
         while(entries.hasNext()){
-            Map.Entry<String, Series> entry = entries.next();
+            Map.Entry<String, XYSeries> entry = entries.next();
             chart.addSeries(entry.getKey(),entry.getValue());
         }
         //add prepared chart to panel

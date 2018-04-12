@@ -65,12 +65,13 @@ public class Task implements Serializable {
     private int hashFunction_b;
     private int maxBucketSize;
     private int minBucketSize;
+    private String stdHash;
+    private String averageBucketSize;
     private boolean graphIsDelayed;
     private String searchKeyType;//custom,always-in,not-in,random
     private int ram;
     private boolean overrideFlag; // override existing task if (when) edited?
     private String totalProgress;
-    /////////////////////////////////////////////////////////
     private boolean findMaxElem;
     private String minInputValue;
     private String maxInputValue;
@@ -78,7 +79,6 @@ public class Task implements Serializable {
     private Long step;
     private Long rangeFrom;
     private Long rangeTo;
-    //////////////////////////////////////////////////////////
     // For Tree based tasks
     private String treeSize;
     private String treeRangeLowerLimit;
@@ -95,8 +95,9 @@ public class Task implements Serializable {
     private String timeDelete;
     private String nodeLevel;
     private String treeHight;
+    private String checkpoints;
     
-    private String notes;   // for notes to remember - not implemented yet as a functionality
+    private String notes; 
     protected Integer status;
     // make it able to fire property changed events
     PropertyChangeSupport taskPcs;
@@ -150,20 +151,19 @@ public class Task implements Serializable {
         this.hashFunction_b = other.hashFunction_b;
         this.maxBucketSize = other.maxBucketSize;
         this.minBucketSize = other.minBucketSize;
+        this.stdHash = other.stdHash;
+        this.averageBucketSize = other.averageBucketSize;
         this.graphIsDelayed = other.graphIsDelayed;
         this.searchKeyType = other.searchKeyType;
         this.ram = other.ram;
         this.overrideFlag = other.overrideFlag;
-        //////////////////////////////////////////
         this.findMaxElem = other.findMaxElem;
         this.minInputValue = other.minInputValue;
         this.maxInputValue = other.maxInputValue;
         this.queueSize = other.queueSize;
         this.rangeFrom = other.rangeFrom;
         this.rangeTo = other.rangeTo;
-        this.step = other.step;
-        //////////////////////////////////////////
-        
+        this.step = other.step;        
         this.treeSize = other.treeSize;
         this.treeRangeLowerLimit = other.treeRangeLowerLimit;
         this.treeRangeUpperLimit = other.treeRangeUpperLimit;
@@ -181,6 +181,15 @@ public class Task implements Serializable {
         this.maxRecursionDepth = other.maxRecursionDepth;
         this.memoryFootprint = other.memoryFootprint;
         this.totalProgress = other.totalProgress;
+        this.checkpoints = other.checkpoints;
+    }
+    
+    public void setCheckpoints(String checkpoints) {
+        this.checkpoints = checkpoints;
+    }
+
+    public String getCheckpoints() {
+        return checkpoints;
     }
 
     public void setTaskID(String taskID) {
@@ -491,17 +500,6 @@ public class Task implements Serializable {
         return minBucketSize;
     }
 
-//    public String getHashType(Boolean asString) {
-//        if (!asString) {
-//            return AlgoBench.properties.getProperty("HASHING_FUNCTION_" + hashFunctionType.toUpperCase());
-//        }
-//        return hashFunctionType;
-//    }
-//
-//    public void setHashFunctionType(String hashFunctionType) {
-//        this.hashFunctionType = hashFunctionType;
-//    }
-
     public String getHashKeyType(Boolean asString) {
         if (!asString) {
             return AlgoBench.properties.getProperty("HASHING_KEY_" + hashKeyType.toUpperCase());
@@ -536,6 +534,18 @@ public class Task implements Serializable {
         String result = "|"+a+"K+"+b+"| mod "+n;
         
         return result;
+    }
+    public void setSTDHash(String std){
+        this.stdHash=std;
+    }
+    public String getSTDHash(){
+        return stdHash;
+    }
+    public void setAverageBucketSize(String avgBucketSize){
+        this.averageBucketSize=avgBucketSize;
+    }
+    public String getAverageBucketSize(){
+        return averageBucketSize;
     }
     
     public void setTotalProgress(String progress)
@@ -694,7 +704,6 @@ public class Task implements Serializable {
         return runTitle;
     }
     
-    ///////////////////////////
     //set
     public void setMinInputValue(String minInputValue){   
         this.minInputValue = minInputValue;
@@ -756,7 +765,6 @@ public class Task implements Serializable {
     }
     
     
-    ///////////////////////////
 
     public String getCommand() {
         String r = "ALGORITHM:" + getAlgorithmCode();
@@ -776,7 +784,6 @@ public class Task implements Serializable {
         }
         else if (getAlgorithmGroup(true).equals("HASH")) {
             r += "\nHASH-BUCKET-ARRAY-SIZE:" + Integer.toString(getHashBucketSize());
-            //r += "\nHASH-FUNCTION-TYPE:" + getHashType(false);
             r += "\nHASH-KEY-TYPE:" + getHashKeyType(false);
             r += "\nHASH-FUNCTION-A:" + getHashparameters('a');
             r += "\nHASH-FUNCTION-B:" + getHashparameters('b');

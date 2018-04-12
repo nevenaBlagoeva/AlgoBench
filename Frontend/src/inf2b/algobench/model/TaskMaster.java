@@ -1,3 +1,4 @@
+
 /*
  * The MIT License
  *
@@ -71,6 +72,7 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
     protected int responseLineCount;
     private Task task;
     protected TaskOverviewPanel taskPanel;
+    protected String checkpoints;
     // contains XChartPanel, a 3rd party library that's not serialisable
     // so skip during serialisation and reinitialise later
     transient protected ResultsChartPanel resultChartPanel;
@@ -111,6 +113,7 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
         // a separate method
         this.terminationRequested = new AtomicBoolean(false);
         this.taskPanel = new TaskOverviewPanel(task);
+        //this.checkPoints = new Checkpoints(task);
         this.stateChanged = false;
 
         // those who need to be told when this finishes
@@ -176,17 +179,32 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
             // no more than just the headings
             return;
         }
+        
+        System.out.printf("RESULTS HERE!!!! %s", String.valueOf(response));
+        
+        String[] parts = parseResponse();
+            
+        response = new StringBuilder(parts[0]);
+        // If there are saved checkpoints use them. Needed when loading archived task
+        if (this.checkpoints==null){
+            this.checkpoints = parts[1];
+        }
+        
+        this.task.setCheckpoints(checkpoints);
+            
+        System.out.printf("RESPONSE>>>>>> %s",String.valueOf(response));
+        System.out.printf("CHECKPOINTS>>>>>>> %s",String.valueOf(checkpoints));
+        
         // instantiate and populate table and chart
         Plotter p;
-
         if ("HASH".equals(task.getAlgorithmGroup(true))) {
-            p = new Plotter(this.task.getTaskID(), response.toString(), 2);
-            p.setYAxisLabel("Bucket");
-            p.setXAxisLabel("Bucket Size");
+            p = new Plotter(this.task.getTaskID(), String.valueOf(response).toString(), 2);
+            p.setYAxisLabel("Bucket Size");
+            p.setXAxisLabel("Bucket");
             // additional bar chart for Hash results
-            resultChartPanel = new ResultsChartPanel(task.getTaskID());
-            resultChartPanel.addResultChart(p.getBarChart());
-            resultTablePanel = new ResultsTablePanel(response.toString(), this.getTaskID(), true, "");
+            resultChartPanel = new ResultsChartPanel(task.getTaskID(), task, checkpoints);
+            resultChartPanel.addBarChart(p.getBarChart());
+            resultTablePanel = new ResultsTablePanel(String.valueOf(response), this.getTaskID(), true, "");
             // show averages (for Hashing)
             this.taskPanel.updateComponents("[MINBUCKETSIZE]\t" + this.getTask().getMinBucketSize());
             this.taskPanel.updateComponents("[MAXBUCKETSIZE]\t" + this.getTask().getMaxBucketSize());
@@ -195,7 +213,9 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
             this.taskPanel.updateComponents("[STDDEVIATION]\t" + df.format(p.getStandardDeviation()));
         }
         else {
-            p = new Plotter(this.task.getTaskID(), response.toString(), 0);
+            
+            p = new Plotter(this.task.getTaskID(), String.valueOf(response), 0);
+            //p_chart = new Plotter(this.task.getTaskID(), "Input size\t"+"CH1\n"+this.checkpoints[0], 0);
             if(task.getAlgorithmGroup(true).equals("SEARCH") || task.getAlgorithmGroup(true).equals("TREE")){
                 p.setYAxisLabel("Time (μs)");
             }else if(task.getAlgorithmGroup(true).equals("QUEUE")){
@@ -205,20 +225,64 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
                 p.setYAxisLabel("Time (ms)");
             }
             p.setXAxisLabel("Input Size");
-            resultChartPanel = new ResultsChartPanel(task.getTaskID());
+            resultChartPanel = new ResultsChartPanel(task.getTaskID(), task, checkpoints);
             resultChartPanel.addResultChart(p.getLineChart());
             resultChartPanel.sethasAverage(p.hasAverage());
             if(task.getAlgorithmGroup(true).equals("SEARCH") || task.getAlgorithmGroup(true).equals("TREE")){
-                resultTablePanel = new ResultsTablePanel(response.toString(), task.getTaskID(), false,"(μs)");
+                resultTablePanel = new ResultsTablePanel(this.response.toString(), task.getTaskID(), false,"(μs)");
             } else if(task.getAlgorithmGroup(true).equals("QUEUE")){
-                resultTablePanel = new ResultsTablePanel(response.toString(), task.getTaskID(), false,"(nano)");
+                resultTablePanel = new ResultsTablePanel(this.response.toString(), task.getTaskID(), false,"(nano)");
             } else{
-                resultTablePanel = new ResultsTablePanel(response.toString(), task.getTaskID(), false,"(ms)");
+                resultTablePanel = new ResultsTablePanel(this.response.toString(), task.getTaskID(), false,"(ms)");
             }
         }
 
         resultChartPanel.validate();
     }
+    
+    public String[] parseResponse(){
+        
+        String r = this.response.toString();
+        String[] lines = r.split("\n");
+        String[] titles = lines[0].split("\t");
+        Vector<Integer> runs = new Vector<Integer>();
+        Vector<Integer> checkp = new Vector<Integer>();
+        runs.add(0);
+        checkp.add(0);
+        String runsData = "";
+        String checkpData = "";
+        for(int i=1; i<titles.length; i++){
+            if(titles[i].contains("Checkpoint")) {
+                checkp.add(i);
+            }
+            else{
+                runs.add(i);
+            }   
+        }
+        
+        System.out.print(runs);
+        System.out.print(checkp);
+
+        
+        for(int i=0; i<lines.length; i++){
+            String[] l = lines[i].split("\t");
+            for(int j=0;j<l.length;j++){
+                
+                if(runs.contains(j)) runsData += l[j]+"\t";
+                if(checkp.contains(j)) checkpData += l[j]+"\t";
+                
+                
+            } 
+            
+            runsData+="\n";
+            checkpData+="\n";
+        }
+        
+        String[] parsed = {runsData, checkpData};
+        
+        return parsed;
+    }
+    
 
     public ResultsChartPanel getResultsChartPanel()
     {
@@ -247,6 +311,7 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
 
         while ((line = bfReader.readLine()) != null) {
             this.taskPanel.updateComponents(line);
+            //this.checkPoints.updateComponents(line);
             this.getTask().updateAfterComplete(line);
         }
         // wait for the process to end
@@ -318,8 +383,8 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
                             break;
                         default:
                             response.append(responseLine.trim());
-                            //System.out.printf("\nThis is RESPONSELINE : %s",String.valueOf(responseLine.trim()));
-                            //System.out.printf("\nThis is RESPONSE : %s",String.valueOf(response));
+                            System.out.printf("\nThis is RESPONSELINE : %s",String.valueOf(responseLine.trim()));
+                            System.out.printf("\nThis is RESPONSE : %s",String.valueOf(response));
                             response.append("\n");
                             ++responseLineCount;
                             break;
@@ -411,7 +476,11 @@ public class TaskMaster implements Runnable, ITaskCompleteNotifier, Serializable
     public AlgoBench.TaskState getState() {
         return this.state;
     }
-
+    
+    public String getCheckpoints(){
+        return this.checkpoints;
+    }
+    
     public final synchronized void setState(TaskState taskState) {
         this.state = taskState;
     }
